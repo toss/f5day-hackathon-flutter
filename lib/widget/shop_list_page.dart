@@ -113,7 +113,7 @@ class _ShopListPageState extends State<ShopListPage> {
               Container(
                 margin: EdgeInsets.only(top: 12),
                 child: Text(
-                  "♥ ${shop.likes.toString()}",
+                  "♥ ${shop.likesToString()}",
                   style: TextStyle(color: Color(0xffff5e9b)),
                 ),
               )
