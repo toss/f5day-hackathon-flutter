@@ -44,6 +44,13 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Widget _listView(List<Shop> list) {
     print("_listView $list");
+    if (list.isEmpty) {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return ListView.builder(
         controller: _controller,
         itemCount: list.length,
