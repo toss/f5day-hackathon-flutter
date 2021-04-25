@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1044174354394",
+    "project_id": "stylebook-58162",
+    "storage_bucket": "stylebook-58162.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044174354394:android:589fa3e1648dccae3c72e3",
+        "android_client_info": {
+          "package_name": "com.style.book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1044174354394-1eld66nt06c4ivj49o7c1hbbeufabad9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4tyfQm2YCY7UOQz7DdwL8uKMcNUdGWcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1044174354394-1eld66nt06c4ivj49o7c1hbbeufabad9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
