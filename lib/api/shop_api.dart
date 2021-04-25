@@ -6,8 +6,8 @@ import 'package:style_book/api/api_service.dart';
 
 import '../model/shop_model.dart';
 
-class ProductApi extends AbstractApi {
-  ProductApi() : super("https://toss.vn/v1/hackathon/stylebook/shop");
+class ShopApi extends AbstractApi {
+  ShopApi() : super("https://toss.vn/v1/hackathon/stylebook/shop");
 
   Future<List<Shop>> fetchPage(String? name) async {
     //filter[name]=Herzig
