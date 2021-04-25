@@ -18,16 +18,16 @@ class Shop {
   @JsonKey(name: "imageSmall")
   final String? imageSmall;
   @JsonKey(name: "likes")
-  final int _likes;
+  final int likes;
   @JsonKey(name: "tag")
   final String? tag;
   @JsonKey(name: "url")
   final String? url;
 
-  Shop(this.rank, this.name, this.imageBig, this.imageSmall, this._likes,
+  Shop(this.rank, this.name, this.imageBig, this.imageSmall, this.likes,
       this.tag, this.url);
 
   String likesToString() {
-    return NumberFormat.decimalPattern("vi").format(_likes).toString();
+    return NumberFormat.decimalPattern("vi").format(likes).toString();
   }
 }

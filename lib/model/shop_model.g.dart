@@ -23,7 +23,7 @@ Map<String, dynamic> _$ShopToJson(Shop instance) => <String, dynamic>{
       'name': instance.name,
       'imageBig': instance.imageBig,
       'imageSmall': instance.imageSmall,
-      'likes': instance._likes,
+      'likes': instance.likes,
       'tag': instance.tag,
       'url': instance.url,
     };
