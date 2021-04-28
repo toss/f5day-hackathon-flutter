@@ -2,7 +2,6 @@
     package="com.style.style_book">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <queries>
         <intent>
