@@ -6,7 +6,7 @@ import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:style_book/widget/inapp_webview_page.dart';
 
 import 'widget_builder.dart';
 
@@ -112,7 +112,7 @@ class ShopState extends State<ShopDetailPage> {
                 onPressed: () {
                   EventLog.sendEventLog("click_facebook",
                       eventProperties: {'item': _shop.toJson(_shop)});
-                  _launchUrl(_shop.url ?? "");
+                  _launchUrl(url: _shop.url ?? "", title: _shop.name);
                 },
                 child: Text("Go to Facebook"),
               ),
@@ -151,11 +151,11 @@ class ShopState extends State<ShopDetailPage> {
     if (items.any((element) => element.url == null)) {
       return InkWell(
         onTap: () {
-          EventLog.sendEventLog("click_item_priview_empty",
+          EventLog.sendEventLog("click_item_preview_empty",
               eventProperties: {'item': _shop.toJson(_shop)});
-          _launchUrl(_shop.url ?? "");
+          _launchUrl(url: _shop.url ?? "", title: _shop.name);
         },
-        child: Image.network(_shop.imageBig ?? ""),
+        //child: Image.network(_shop.imageBig ?? ""),
       );
     }
     return GridView.builder(
@@ -173,23 +173,29 @@ class ShopState extends State<ShopDetailPage> {
             onTap: () {
               EventLog.sendEventLog("click_item",
                   eventProperties: {'item': item.toJson(item)});
-              _launchUrl(item.url ?? "");
+              _launchUrl(url: item.url ?? "", title: _shop.name);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(item.image2 ?? "", fit: BoxFit.fitWidth),
+              child: AnimatedSwitcher(
+                child: Image.network(item.image2 ?? "", fit: BoxFit.fitWidth),
+                duration: Duration(seconds: 1),
+              ),
             ),
           );
         });
   }
 
-  _launchUrl(String url) async {
-    final validate = await canLaunch(url);
+  _launchUrl({required String url, String? title}) async {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => InAppWebViewPage(url, title)));
+    //Navigator.pushReplacementNamed(context, routeName)
+    /*final validate = await canLaunch(url);
     print("_launchUrl $url / $validate");
     if (validate) {
       await launch(url);
     } else {
       print("_launchUrl $url / $validate");
-    }
+    }*/
   }
 }

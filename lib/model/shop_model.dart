@@ -9,12 +9,8 @@ class Shop {
 
   Map<String, dynamic> toJson(instance) => _$ShopToJson(this);
 
-  @JsonKey(name: 'rank')
-  final int rank;
   @JsonKey(name: "name")
   final String? name;
-  @JsonKey(name: "imageBig")
-  final String? imageBig;
   @JsonKey(name: "imageSmall")
   final String? imageSmall;
   @JsonKey(name: "likes")
@@ -24,8 +20,7 @@ class Shop {
   @JsonKey(name: "url")
   final String? url;
 
-  Shop(this.rank, this.name, this.imageBig, this.imageSmall, this.likes,
-      this.tag, this.url);
+  Shop(this.name, this.imageSmall, this.likes, this.tag, this.url);
 
   String likesToString() {
     return NumberFormat.decimalPattern("vi").format(likes).toString();

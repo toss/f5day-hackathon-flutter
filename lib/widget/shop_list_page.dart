@@ -44,6 +44,7 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Widget _listView(List<Shop> list) {
     print("_listView $list");
+    list.sort((a, b) => b.likes.compareTo(a.likes));
     if (list.isEmpty) {
       return Container(
         child: Center(
@@ -55,11 +56,11 @@ class _ShopListPageState extends State<ShopListPage> {
         controller: _controller,
         itemCount: list.length,
         itemBuilder: (context, index) {
-          return _listItemBuilder(list[index]);
+          return _listItemBuilder(index, list[index]);
         });
   }
 
-  Widget _listItemBuilder(Shop shop) {
+  Widget _listItemBuilder(int index, Shop shop) {
     return InkWell(
       onTap: () {
         EventLog.sendEventLog("click_shop",
@@ -67,13 +68,13 @@ class _ShopListPageState extends State<ShopListPage> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ShopDetailPage(shop)));
       },
-      child: _showContainer(shop),
+      child: _showContainer(index + 1, shop),
     );
   }
 
-  Widget _showContainer(Shop shop) {
+  Widget _showContainer(int rank, Shop shop) {
     final rankTextColor;
-    if (shop.rank <= 3) {
+    if (rank <= 3) {
       rankTextColor = Color(0xffff5e9b);
     } else {
       rankTextColor = Color(0xff333d4b);
@@ -86,7 +87,7 @@ class _ShopListPageState extends State<ShopListPage> {
         children: [
           Container(
             child: Text(
-              shop.rank.toString(),
+              rank.toString(),
               style: TextStyle(
                   color: rankTextColor,
                   fontWeight: FontWeight.bold,

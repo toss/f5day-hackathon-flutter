@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:style_book/api/item_api.dart';
@@ -60,6 +62,34 @@ Future<void> initAppsflyer() async {
 
     EventLog.setProperties({"af_status": res.toString(), "af_sub1": afSub1});
   });
+}
+
+Future<void> initWebView() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Permission.camera.request();
+  // await Permission.microphone.request();
+  // await Permission.storage.request();
+
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+    if (swAvailable && swInterceptAvailable) {
+      AndroidServiceWorkerController serviceWorkerController =
+          AndroidServiceWorkerController.instance();
+
+      serviceWorkerController.serviceWorkerClient = AndroidServiceWorkerClient(
+        shouldInterceptRequest: (request) async {
+          print(request);
+          return null;
+        },
+      );
+    }
+  }
 }
 
 void main() {
