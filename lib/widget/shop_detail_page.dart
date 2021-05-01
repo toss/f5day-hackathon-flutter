@@ -30,7 +30,7 @@ class ShopState extends State<ShopDetailPage> {
   void initState() {
     super.initState();
     final provider = Provider.of<ItemProvider>(context, listen: false);
-    provider.getItemList(_shop.name ?? "");
+    provider.getItemList(_shop.userName ?? "");
   }
 
   @override
@@ -65,11 +65,11 @@ class ShopState extends State<ShopDetailPage> {
     return Container(
         child: Column(
       children: [
-        WidgetUtils.shopPicture(_shop.imageSmall ?? ""),
+        WidgetUtils.shopPicture(_shop.image ?? ""),
         Container(
           margin: EdgeInsets.only(top: 24),
           child: Text(
-            _shop.tag ?? "",
+            _shop.userName ?? "",
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
           ),
         ),
@@ -90,7 +90,7 @@ class ShopState extends State<ShopDetailPage> {
 
   Widget _itemList(List<Item> items) {
     bool isLoading =
-        items.isEmpty || items.any((element) => element.url == null);
+        items.isEmpty || items.any((element) => element.images.isEmpty);
 
     return ListView.builder(
         itemCount: 3,
@@ -148,7 +148,7 @@ class ShopState extends State<ShopDetailPage> {
       );
     }
 
-    if (items.any((element) => element.url == null)) {
+    if (items.any((element) => element.postUrl == null)) {
       return InkWell(
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
@@ -173,17 +173,26 @@ class ShopState extends State<ShopDetailPage> {
             onTap: () {
               EventLog.sendEventLog("click_item",
                   eventProperties: {'item': item.toJson(item)});
-              _launchUrl(url: item.url ?? "", title: _shop.name);
+              _launchUrl(url: item.postUrl ?? "", title: _shop.name);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: AnimatedSwitcher(
-                child: Image.network(item.image2 ?? "", fit: BoxFit.fitWidth),
+                child: _images(item),
                 duration: Duration(seconds: 1),
               ),
             ),
           );
         });
+  }
+
+  Widget? _images(Item item) {
+    final images = item.imageList();
+
+    if (images.isEmpty) {
+      return null;
+    }
+    return Image.network(images[0], fit: BoxFit.fitHeight);
   }
 
   _launchUrl({required String url, String? title}) async {

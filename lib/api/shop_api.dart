@@ -6,9 +6,10 @@ import 'package:style_book/api/api_service.dart';
 import '../model/shop_model.dart';
 
 class ShopApi extends AbstractApi {
-  ShopApi()
-      : super(
-            "https://api.sheety.co/c6dc9c55c800455617966a1d66e8c107/stylebook/shop");
+  static const String _url =
+      "https://api.sheety.co/c6dc9c55c800455617966a1d66e8c107/stylebook/shops";
+
+  ShopApi() : super(_url);
 
   Future<List<Shop>> fetchPage(String? name) async {
     //filter[name]=Herzig
@@ -33,8 +34,9 @@ class ShopApi extends AbstractApi {
 
     if (response.statusCode == 200) {
       final decodeJson = convert.jsonDecode(response.body);
-      List shop = decodeJson['shop'];
-      print('http: $decodeJson');
+
+      print('http decodeJson : $decodeJson');
+      List shop = decodeJson['shops'];
       shop.forEach((element) => list.add(Shop.fromJson(element)));
     } else {
       print("http : $response");

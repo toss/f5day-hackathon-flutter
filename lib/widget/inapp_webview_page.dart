@@ -45,14 +45,12 @@ class InAppWebViewState extends State<InAppWebViewPage> {
       ),
       body: Container(
         padding: EdgeInsets.all(0),
-        child: Expanded(
-          child: InAppWebView(
-            initialOptions: options,
-            initialUrlRequest: URLRequest(url: Uri.parse(_url)),
-            onWebViewCreated: (controller) {
-              _webViewController = controller;
-            },
-          ),
+        child: InAppWebView(
+          initialOptions: options,
+          initialUrlRequest: URLRequest(url: Uri.parse(_url)),
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
         ),
       ),
     );
