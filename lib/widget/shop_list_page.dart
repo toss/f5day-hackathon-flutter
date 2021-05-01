@@ -44,6 +44,13 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Widget _listView(List<Shop> list) {
     print("_listView $list");
+    if (list.isEmpty) {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return ListView.builder(
         controller: _controller,
         itemCount: list.length,
@@ -113,7 +120,7 @@ class _ShopListPageState extends State<ShopListPage> {
               Container(
                 margin: EdgeInsets.only(top: 12),
                 child: Text(
-                  "♥ ${shop.likes.toString()}",
+                  "♥ ${shop.likesToString()}",
                   style: TextStyle(color: Color(0xffff5e9b)),
                 ),
               )

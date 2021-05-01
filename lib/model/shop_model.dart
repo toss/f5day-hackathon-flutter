@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_model.g.dart';
@@ -25,4 +26,8 @@ class Shop {
 
   Shop(this.rank, this.name, this.imageBig, this.imageSmall, this.likes,
       this.tag, this.url);
+
+  String likesToString() {
+    return NumberFormat.decimalPattern("vi").format(likes).toString();
+  }
 }
