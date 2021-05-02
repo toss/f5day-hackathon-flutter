@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -6,7 +8,8 @@ import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
-import 'package:style_book/view/inapp_webview_page.dart';
+import 'package:style_book/util.dart';
+import 'package:style_book/view/item_detail_widget.dart';
 
 import 'widget_builder.dart';
 
@@ -30,7 +33,7 @@ class ShopState extends State<ShopDetailPage> {
   void initState() {
     super.initState();
     final provider = Provider.of<ItemProvider>(context, listen: false);
-    provider.getItemList(_shop.userName ?? "");
+    provider.getItemList(_shop.nameId ?? "");
   }
 
   @override
@@ -65,18 +68,18 @@ class ShopState extends State<ShopDetailPage> {
     return Container(
         child: Column(
       children: [
-        WidgetUtils.shopPicture(_shop.image ?? ""),
+        WidgetUtils.shopPicture(_shop.imageProfile ?? ""),
         Container(
           margin: EdgeInsets.only(top: 24),
           child: Text(
-            _shop.userName ?? "",
+            _shop.nameDisplay ?? "",
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
           ),
         ),
         Container(
           margin: EdgeInsets.only(top: 6, bottom: 6),
           child: Text(
-            _shop.name ?? "",
+            _shop.nameId ?? "",
             style: TextStyle(fontSize: 24, color: Colors.grey.shade800),
           ),
         ),
@@ -112,7 +115,8 @@ class ShopState extends State<ShopDetailPage> {
                 onPressed: () {
                   EventLog.sendEventLog("click_facebook",
                       eventProperties: {'item': _shop.toJson(_shop)});
-                  _launchUrl(url: _shop.url ?? "", title: _shop.name);
+                  launchUrl(context,
+                      url: _shop.url ?? "", title: _shop.nameDisplay);
                 },
                 child: Text("Go to Facebook"),
               ),
@@ -148,12 +152,12 @@ class ShopState extends State<ShopDetailPage> {
       );
     }
 
-    if (items.any((element) => element.postUrl == null)) {
+    if (items.any((element) => element.url == null)) {
       return InkWell(
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
               eventProperties: {'item': _shop.toJson(_shop)});
-          _launchUrl(url: _shop.url ?? "", title: _shop.name);
+          launchUrl(context, url: _shop.url ?? "", title: _shop.nameDisplay);
         },
         //child: Image.network(_shop.imageBig ?? ""),
       );
@@ -169,11 +173,16 @@ class ShopState extends State<ShopDetailPage> {
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final item = items[index];
-          return InkWell(
+          return ItemImageWidget(_shop, item);
+          /*InkWell(
             onTap: () {
               EventLog.sendEventLog("click_item",
                   eventProperties: {'item': item.toJson(item)});
-              _launchUrl(url: item.postUrl ?? "", title: _shop.name);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => ItemDetailWidget(_shop, item)));
+              //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -182,21 +191,75 @@ class ShopState extends State<ShopDetailPage> {
                 duration: Duration(seconds: 1),
               ),
             ),
-          );
+          )*/
+          ;
         });
   }
+}
 
-  Widget? _images(Item item) {
-    final images = item.imageList();
+class ItemImageWidget extends StatefulWidget {
+  final Item _item;
+  final Shop _shop;
 
-    if (images.isEmpty) {
-      return null;
-    }
-    return Image.network(images[0], fit: BoxFit.fitHeight);
+  ItemImageWidget(this._shop, this._item);
+
+  @override
+  State<StatefulWidget> createState() => ItemImageState(_shop, _item);
+}
+
+class ItemImageState extends State<ItemImageWidget> {
+  Item _item;
+  Shop _shop;
+
+  late Timer _timer;
+
+  int _index = 0;
+
+  ItemImageState(this._shop, this._item);
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(new Duration(seconds: 5), (callback) {
+      setState(() {
+        _index = (_index + 1) % _item.imageList().length;
+      });
+    });
+
+    super.initState();
   }
 
-  _launchUrl({required String url, String? title}) async {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => InAppWebViewPage(url, title)));
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return InkWell(
+      onTap: () {
+        EventLog.sendEventLog("click_item",
+            eventProperties: {'item': _item.toJson(_item)});
+        Navigator.push(context,
+            MaterialPageRoute(builder: (c) => ItemDetailWidget(_shop, _item)));
+        //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: AnimatedSwitcher(
+          child: _images(_item.imageList()[_index]),
+          duration: Duration(seconds: 1),
+        ),
+      ),
+    );
+  }
+
+  Widget? _images(String image) {
+    if (image.isEmpty) {
+      return null;
+    }
+
+    return Image.network(image, fit: BoxFit.fitHeight);
   }
 }

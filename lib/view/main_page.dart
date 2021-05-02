@@ -22,13 +22,11 @@ class MainPageHome extends StatefulWidget {
 class MainPageState extends State<MainPageHome> {
   int _selectedIndex = 0;
 
-  List<Widget> _childWidgets = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Seller TOP 50"),
+          title: _onTapTitle(_selectedIndex),
           elevation: 0,
         ),
         backgroundColor: Colors.white,
@@ -49,5 +47,12 @@ class MainPageState extends State<MainPageHome> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Widget? _onTapTitle(int index) {
+    if (index != 0) {
+      return null;
+    }
+    return Text("Seller TOP 50");
   }
 }
