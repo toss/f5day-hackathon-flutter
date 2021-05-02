@@ -8,19 +8,24 @@ part of 'shop_model.dart';
 
 Shop _$ShopFromJson(Map<String, dynamic> json) {
   return Shop(
-    json['name'] as String?,
-    json['image'] as String?,
+    json['id'] as int?,
+    json['name_display'] as String?,
+    json['name_id'] as String?,
+    json['image_profile'] as String?,
     json['likes'] as int,
-    json['userName'] as String?,
+    json['created'] as String?,
+    json['updated'] as String?,
     json['url'] as String?,
   );
 }
 
-Map<String, dynamic> _$ShopToJson(Shop instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'image': instance.image,
+Map<String, dynamic> _$ShopToJson(Shop instance) => <String, dynamic>{
+      'id': instance.id,
+      'name_display': instance.nameDisplay,
+      'name_id': instance.nameId,
+      'image_profile': instance.imageProfile,
       'likes': instance.likes,
-      'userName': instance.userName,
+      'created': instance.created,
+      'updated': instance.updated,
       'url': instance.url,
     };

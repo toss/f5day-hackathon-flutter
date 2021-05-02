@@ -98,14 +98,14 @@ class _ShopListPageState extends State<ShopListPage> {
           Container(
               padding: EdgeInsets.only(left: 8.0, right: 8.0),
               width: 120,
-              child: WidgetUtils.shopPicture(shop.image ?? "")),
+              child: WidgetUtils.shopPicture(shop.imageProfile ?? "")),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 margin: EdgeInsets.only(top: 2),
-                child: Text(shop.name ?? "",
+                child: Text(shop.nameDisplay ?? "",
                     style: TextStyle(
                       color: Colors.grey.shade800,
                       fontWeight: FontWeight.bold,
@@ -115,7 +115,7 @@ class _ShopListPageState extends State<ShopListPage> {
               Container(
                 margin: EdgeInsets.only(top: 4),
                 child: Text(
-                  shop.name ?? "",
+                  shop.nameDisplay ?? "",
                   style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
                 ),
               ),

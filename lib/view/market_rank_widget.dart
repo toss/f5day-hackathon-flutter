@@ -8,12 +8,8 @@ import 'package:style_book/provider/item_provider.dart';
 class MarketRankStatelessWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Rank"),
-        elevation: 0.0,
-      ),
-      body: MarketRankGridWidget(),
+    return Container(
+      child: MarketRankGridWidget(),
     );
   }
 }
@@ -24,6 +20,8 @@ class MarketRankGridWidget extends StatefulWidget {
 }
 
 class MarketRankState extends State<MarketRankGridWidget> {
+  final _controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +41,8 @@ class MarketRankState extends State<MarketRankGridWidget> {
             mainAxisSpacing: 12),
         itemCount: provider.items.length,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(top: 8.0, bottom: 16.0),
+        controller: _controller,
         itemBuilder: (context, index) {
           final item = provider.items[index];
           return InkWell(
@@ -65,10 +64,11 @@ class MarketRankState extends State<MarketRankGridWidget> {
 
   Widget? _getImage(Item item) {
     final list = item.imageList();
+    print("market image list $list");
     if (list.isEmpty) {
       return null;
     }
 
-    Image.network(list[0]);
+    return Image.network(list[0], fit: BoxFit.fitHeight);
   }
 }

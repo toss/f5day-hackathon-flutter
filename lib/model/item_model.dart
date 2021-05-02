@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'item_model.g.dart';
@@ -22,12 +23,14 @@ class Item {
   String? postUrl;
   @JsonKey(name: 'likes')
   int likes = 0;
+  @JsonKey(name: 'time')
+  String time;
 
 /*  @JsonKey(name: 'comment')
   List<dynamic>? comment;*/
 
   Item(this.userId, this.postId, this.images, this.text, this.postUrl,
-      this.likes);
+      this.likes, this.time);
 
   List<String> imageList() {
     try {
@@ -35,6 +38,14 @@ class Item {
       return result.map((e) => e.toString()).toList();
     } catch (e) {
       return List.empty();
+    }
+  }
+
+  Widget? getImageWidget(int index, {BoxFit fit = BoxFit.fill}) {
+    try {
+      return Image.network(imageList()[index], fit: fit);
+    } catch (e) {
+      return null;
     }
   }
 }

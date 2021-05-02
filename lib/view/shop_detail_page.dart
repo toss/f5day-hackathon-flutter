@@ -6,7 +6,10 @@ import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
+import 'package:style_book/util.dart';
 import 'package:style_book/view/inapp_webview_page.dart';
+import 'package:style_book/view/item_detail_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'widget_builder.dart';
 
@@ -30,7 +33,7 @@ class ShopState extends State<ShopDetailPage> {
   void initState() {
     super.initState();
     final provider = Provider.of<ItemProvider>(context, listen: false);
-    provider.getItemList(_shop.userName ?? "");
+    provider.getItemList(_shop.nameId ?? "");
   }
 
   @override
@@ -65,18 +68,18 @@ class ShopState extends State<ShopDetailPage> {
     return Container(
         child: Column(
       children: [
-        WidgetUtils.shopPicture(_shop.image ?? ""),
+        WidgetUtils.shopPicture(_shop.imageProfile ?? ""),
         Container(
           margin: EdgeInsets.only(top: 24),
           child: Text(
-            _shop.userName ?? "",
+            _shop.nameDisplay ?? "",
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
           ),
         ),
         Container(
           margin: EdgeInsets.only(top: 6, bottom: 6),
           child: Text(
-            _shop.name ?? "",
+            _shop.nameId ?? "",
             style: TextStyle(fontSize: 24, color: Colors.grey.shade800),
           ),
         ),
@@ -112,7 +115,8 @@ class ShopState extends State<ShopDetailPage> {
                 onPressed: () {
                   EventLog.sendEventLog("click_facebook",
                       eventProperties: {'item': _shop.toJson(_shop)});
-                  _launchUrl(url: _shop.url ?? "", title: _shop.name);
+                  launchUrl(context,
+                      url: _shop.url ?? "", title: _shop.nameDisplay);
                 },
                 child: Text("Go to Facebook"),
               ),
@@ -153,7 +157,7 @@ class ShopState extends State<ShopDetailPage> {
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
               eventProperties: {'item': _shop.toJson(_shop)});
-          _launchUrl(url: _shop.url ?? "", title: _shop.name);
+          launchUrl(context, url: _shop.url ?? "", title: _shop.nameDisplay);
         },
         //child: Image.network(_shop.imageBig ?? ""),
       );
@@ -173,7 +177,11 @@ class ShopState extends State<ShopDetailPage> {
             onTap: () {
               EventLog.sendEventLog("click_item",
                   eventProperties: {'item': item.toJson(item)});
-              _launchUrl(url: item.postUrl ?? "", title: _shop.name);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => ItemDetailWidget(_shop, item)));
+              //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -193,10 +201,5 @@ class ShopState extends State<ShopDetailPage> {
       return null;
     }
     return Image.network(images[0], fit: BoxFit.fitHeight);
-  }
-
-  _launchUrl({required String url, String? title}) async {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => InAppWebViewPage(url, title)));
   }
 }
