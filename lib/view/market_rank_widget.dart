@@ -11,6 +11,7 @@ class MarketRankStatelessWidget extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Rank"),
+        elevation: 0.0,
       ),
       body: MarketRankGridWidget(),
     );
@@ -32,7 +33,7 @@ class MarketRankState extends State<MarketRankGridWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ItemProvider>(context, listen: false);
+    final provider = Provider.of<ItemProvider>(context);
 
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
