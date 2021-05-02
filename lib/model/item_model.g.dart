@@ -8,20 +8,21 @@ part of 'item_model.dart';
 
 Item _$ItemFromJson(Map<String, dynamic> json) {
   return Item(
-    json['id'] as int?,
-    json['image1'] as String?,
-    json['image2'] as String?,
-    json['image3'] as String?,
-    json['url'] as String?,
-    json['tag'] as String?,
+    json['userId'] as String?,
+    json['postId'] as String?,
+    json['images'] as String,
+    json['text'] as String?,
+    json['postUrl'] as String?,
+    json['likes'] as int,
   );
 }
 
-Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
-      'id': instance.id,
-      'image1': instance.image1,
-      'image2': instance.image2,
-      'image3': instance.image3,
-      'url': instance.url,
-      'tag': instance.tag,
+Map<String, dynamic> _$ItemToJson(Item instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'postId': instance.postId,
+      'images': instance.images,
+      'text': instance.text,
+      'postUrl': instance.postUrl,
+      'likes': instance.likes,
     };

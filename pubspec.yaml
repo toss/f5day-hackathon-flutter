@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.2+1
+version: 0.0.4+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -38,6 +38,9 @@ dependencies:
   amplitude_flutter: ^3.1.0
   advertising_id: ^2.0.0
   onesignal_flutter: ^3.0.0-beta2
+  intl: ^0.17.0
+  appsflyer_sdk: ^6.2.4+4-nullsafety
+  flutter_inappwebview: ^5.3.2
 
 dev_dependencies:
   flutter_test:
@@ -56,7 +59,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/app_logo.png
+    #- images/app_logo.png
+    - images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

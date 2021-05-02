@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/shop_provider.dart';
-import 'package:style_book/widget/shop_detail_page.dart';
-import 'package:style_book/widget/widget_builder.dart';
+import 'package:style_book/view/shop_detail_page.dart';
+import 'package:style_book/view/widget_builder.dart';
 
 class ShopListPage extends StatefulWidget {
   ShopListPage({Key? key}) : super(key: key);
@@ -33,26 +33,35 @@ class _ShopListPageState extends State<ShopListPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ShopProvider>(context);
-    return Scaffold(
+    return _listView(provider.shopList);
+    /*Scaffold(
         appBar: AppBar(
           title: Text("Seller TOP 50"),
           elevation: 0,
         ),
         backgroundColor: Colors.white,
-        body: _listView(provider.shopList));
+        body: _listView(provider.shopList));*/
   }
 
   Widget _listView(List<Shop> list) {
     print("_listView $list");
+    list.sort((a, b) => b.likes.compareTo(a.likes));
+    if (list.isEmpty) {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return ListView.builder(
         controller: _controller,
         itemCount: list.length,
         itemBuilder: (context, index) {
-          return _listItemBuilder(list[index]);
+          return _listItemBuilder(index, list[index]);
         });
   }
 
-  Widget _listItemBuilder(Shop shop) {
+  Widget _listItemBuilder(int index, Shop shop) {
     return InkWell(
       onTap: () {
         EventLog.sendEventLog("click_shop",
@@ -60,13 +69,13 @@ class _ShopListPageState extends State<ShopListPage> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ShopDetailPage(shop)));
       },
-      child: _showContainer(shop),
+      child: _showContainer(index + 1, shop),
     );
   }
 
-  Widget _showContainer(Shop shop) {
+  Widget _showContainer(int rank, Shop shop) {
     final rankTextColor;
-    if (shop.rank <= 3) {
+    if (rank <= 3) {
       rankTextColor = Color(0xffff5e9b);
     } else {
       rankTextColor = Color(0xff333d4b);
@@ -79,7 +88,7 @@ class _ShopListPageState extends State<ShopListPage> {
         children: [
           Container(
             child: Text(
-              shop.rank.toString(),
+              rank.toString(),
               style: TextStyle(
                   color: rankTextColor,
                   fontWeight: FontWeight.bold,
@@ -89,7 +98,7 @@ class _ShopListPageState extends State<ShopListPage> {
           Container(
               padding: EdgeInsets.only(left: 8.0, right: 8.0),
               width: 120,
-              child: WidgetUtils.shopPicture(shop.imageSmall ?? "")),
+              child: WidgetUtils.shopPicture(shop.image ?? "")),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,14 +115,14 @@ class _ShopListPageState extends State<ShopListPage> {
               Container(
                 margin: EdgeInsets.only(top: 4),
                 child: Text(
-                  shop.tag ?? "",
+                  shop.name ?? "",
                   style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 12),
                 child: Text(
-                  "♥ ${shop.likes.toString()}",
+                  "♥ ${shop.likesToString()}",
                   style: TextStyle(color: Color(0xffff5e9b)),
                 ),
               )
