@@ -25,12 +25,14 @@ class Item {
   int likes = 0;
   @JsonKey(name: 'time')
   String time;
+  @JsonKey(name: 'shop_name_id')
+  String shopNameId;
 
 /*  @JsonKey(name: 'comment')
   List<dynamic>? comment;*/
 
   Item(this.userId, this.postId, this.images, this.text, this.url, this.likes,
-      this.time);
+      this.time, this.shopNameId);
 
   List<String> imageList() {
     try {

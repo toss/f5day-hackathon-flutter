@@ -35,4 +35,22 @@ class ShopApi extends AbstractApi {
 
     return list;
   }
+
+  Future<Shop?> getShop(String shopNameId) async {
+    //shop_name_id=thedelia.45ochodua
+
+    if (shopNameId.isEmpty) {
+      return null;
+    }
+
+    String path = "$baseUrl?shop_name_id=$shopNameId";
+    print("getShop path : $path");
+    final response = await httpGet(Uri.parse(path));
+    if (response.statusCode == 200) {
+      return Shop.fromJson(convert.jsonDecode(response.body)[0]);
+    } else {
+      return null;
+      print("http : $response");
+    }
+  }
 }

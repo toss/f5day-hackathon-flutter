@@ -8,14 +8,25 @@ class ItemProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   List<Item> items = [];
 
+  List<Item>? _showWindowList;
+
+  List<Item> get showWindowList => _showWindowList ?? List.empty();
+
   ItemProvider(this._api);
 
   getItemList(String shopName) {
-    items.clear();
     //notifyListeners();
     _api.fetchPage(shopName).then((value) {
+      items.clear();
       print("items $value");
       items.addAll(value);
+      notifyListeners();
+    });
+  }
+
+  fetchShowWindowList() {
+    _api.fetchPage("").then((value) {
+      _showWindowList = value;
       notifyListeners();
     });
   }

@@ -15,6 +15,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) {
     json['url'] as String?,
     json['likes'] as int,
     json['time'] as String,
+    json['shop_name_id'] as String,
   );
 }
 
@@ -26,4 +27,5 @@ Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
       'url': instance.url,
       'likes': instance.likes,
       'time': instance.time,
+      'shop_name_id': instance.shopNameId,
     };

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:style_book/view/market_rank_widget.dart';
+import 'package:style_book/view/item_show_window_page.dart';
 import 'package:style_book/view/shop_list_page.dart';
 import 'package:style_book/view/widget_component.dart';
 
@@ -23,6 +23,24 @@ class MainPageState extends State<MainPageHome> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    print("MainPageState initState");
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    print("MainPageState deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    print("MainPageState dispose");
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -35,11 +53,7 @@ class MainPageState extends State<MainPageHome> {
         }),
         body: IndexedStack(
           index: _selectedIndex,
-          children: [
-            ShopListPage(),
-            MarketRankStatelessWidget(),
-            ShopListPage()
-          ],
+          children: [ItemShowWindowPage(), ShopListPage(), ShopListPage()],
         ));
   }
 
@@ -50,9 +64,12 @@ class MainPageState extends State<MainPageHome> {
   }
 
   Widget? _onTapTitle(int index) {
-    if (index != 0) {
-      return null;
+    if (index == 0) {
+      return Text("모아보기");
     }
-    return Text("Seller TOP 50");
+    if (index == 1) {
+      return Text("TOP 50  trang mua sắm");
+    }
+    return null;
   }
 }
