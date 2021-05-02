@@ -11,14 +11,11 @@ class ShopApi extends AbstractApi {
   ShopApi() : super(_url);
 
   Future<List<Shop>> fetchPage(String? name) async {
-    //filter[name]=Herzig
     String query;
 
     if (name != null) {
-      // ignore: unnecessary_statements
       query = '/$name';
     } else {
-      // ignore: unnecessary_statements
       query = "";
     }
 
@@ -26,18 +23,11 @@ class ShopApi extends AbstractApi {
     List<Shop> list = [];
     var response =
         await httpGet(Uri.parse(path)); //await http.get(Uri.parse(path));
-    /*.then((response) => response.body)
-        .then(convert.jsonDecode)
-        .then((shop) =>
-            shop['shop'].forEach((model) => list.add(Product.fromJson(model))));*/
 
     if (response.statusCode == 200) {
       Iterable decodeJson = convert.jsonDecode(response.body);
       list.addAll(List<Shop>.from(decodeJson.map((e) => Shop.fromJson(e))));
       print('http decodeJson : $decodeJson');
-      //  list.addAll(List<Shop>.from(decodeJson));
-      //  List shop = decodeJson['shops'];
-      //   decodeJson.forEach((element) => list.add(Shop.fromJson(element)));
     } else {
       print("http : $response");
     }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,9 +9,7 @@ import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/util.dart';
-import 'package:style_book/view/inapp_webview_page.dart';
 import 'package:style_book/view/item_detail_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'widget_builder.dart';
 
@@ -152,7 +152,7 @@ class ShopState extends State<ShopDetailPage> {
       );
     }
 
-    if (items.any((element) => element.postUrl == null)) {
+    if (items.any((element) => element.url == null)) {
       return InkWell(
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
@@ -173,7 +173,8 @@ class ShopState extends State<ShopDetailPage> {
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final item = items[index];
-          return InkWell(
+          return ItemImageWidget(_shop, item);
+          /*InkWell(
             onTap: () {
               EventLog.sendEventLog("click_item",
                   eventProperties: {'item': item.toJson(item)});
@@ -190,16 +191,75 @@ class ShopState extends State<ShopDetailPage> {
                 duration: Duration(seconds: 1),
               ),
             ),
-          );
+          )*/
+          ;
         });
   }
+}
 
-  Widget? _images(Item item) {
-    final images = item.imageList();
+class ItemImageWidget extends StatefulWidget {
+  final Item _item;
+  final Shop _shop;
 
-    if (images.isEmpty) {
+  ItemImageWidget(this._shop, this._item);
+
+  @override
+  State<StatefulWidget> createState() => ItemImageState(_shop, _item);
+}
+
+class ItemImageState extends State<ItemImageWidget> {
+  Item _item;
+  Shop _shop;
+
+  late Timer _timer;
+
+  int _index = 0;
+
+  ItemImageState(this._shop, this._item);
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(new Duration(seconds: 5), (callback) {
+      setState(() {
+        _index = (_index + 1) % _item.imageList().length;
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return InkWell(
+      onTap: () {
+        EventLog.sendEventLog("click_item",
+            eventProperties: {'item': _item.toJson(_item)});
+        Navigator.push(context,
+            MaterialPageRoute(builder: (c) => ItemDetailWidget(_shop, _item)));
+        //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: AnimatedSwitcher(
+          child: _images(_item.imageList()[_index]),
+          duration: Duration(seconds: 1),
+        ),
+      ),
+    );
+  }
+
+  Widget? _images(String image) {
+    if (image.isEmpty) {
       return null;
     }
-    return Image.network(images[0], fit: BoxFit.fitHeight);
+
+    return Image.network(image, fit: BoxFit.fitHeight);
   }
 }

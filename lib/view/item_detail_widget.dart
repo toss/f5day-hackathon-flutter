@@ -110,7 +110,7 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 child: ElevatedButton(
                     onPressed: () {
                       launchUrl(context,
-                          url: _item.postUrl ?? "", title: _shop.nameDisplay);
+                          url: _item.url ?? "", title: _shop.nameDisplay);
                     },
                     style: ElevatedButton.styleFrom(primary: Color(0xffff5e9b)),
                     child: Text("쇼핑몰로 이동")),

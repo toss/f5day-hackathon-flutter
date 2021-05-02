@@ -13,14 +13,14 @@ class Item {
 
   @JsonKey(name: 'userId')
   String? userId;
-  @JsonKey(name: 'postId')
-  String? postId;
+  @JsonKey(name: 'post_id')
+  int? postId;
   @JsonKey(name: 'images')
   String images;
   @JsonKey(name: 'text')
   String? text;
-  @JsonKey(name: 'postUrl')
-  String? postUrl;
+  @JsonKey(name: 'url')
+  String? url;
   @JsonKey(name: 'likes')
   int likes = 0;
   @JsonKey(name: 'time')
@@ -29,8 +29,8 @@ class Item {
 /*  @JsonKey(name: 'comment')
   List<dynamic>? comment;*/
 
-  Item(this.userId, this.postId, this.images, this.text, this.postUrl,
-      this.likes, this.time);
+  Item(this.userId, this.postId, this.images, this.text, this.url, this.likes,
+      this.time);
 
   List<String> imageList() {
     try {

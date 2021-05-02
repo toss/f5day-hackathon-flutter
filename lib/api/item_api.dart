@@ -25,6 +25,8 @@ class ItemApi extends AbstractApi {
     /* var response = await http
         .get(Uri.parse(path), headers: {"Authorization": "Bearer phobobunbo"});*/
     if (response.statusCode == 200) {
+      Iterable decodeJson = convert.jsonDecode(response.body);
+      list.addAll(List<Item>.from(decodeJson.map((e) => Item.fromJson(e))));
       /*  final decodeJson = convert.jsonDecode(response.body);
       print('ItemApi http: decodeJson $decodeJson');
       List shop = decodeJson['items'];
