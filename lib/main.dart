@@ -13,7 +13,8 @@ import 'package:style_book/api/item_api.dart';
 import 'package:style_book/api/shop_api.dart';
 import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/provider/shop_provider.dart';
-import 'package:style_book/widget/stateless_widgets.dart';
+import 'package:style_book/view/main_page.dart';
+import 'package:style_book/view/stateless_widgets.dart';
 
 import 'log/event_log.dart';
 

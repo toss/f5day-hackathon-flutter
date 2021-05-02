@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/shop_provider.dart';
-import 'package:style_book/widget/shop_detail_page.dart';
-import 'package:style_book/widget/widget_builder.dart';
+import 'package:style_book/view/shop_detail_page.dart';
+import 'package:style_book/view/widget_builder.dart';
 
 class ShopListPage extends StatefulWidget {
   ShopListPage({Key? key}) : super(key: key);
@@ -33,13 +33,14 @@ class _ShopListPageState extends State<ShopListPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ShopProvider>(context);
-    return Scaffold(
+    return _listView(provider.shopList);
+    /*Scaffold(
         appBar: AppBar(
           title: Text("Seller TOP 50"),
           elevation: 0,
         ),
         backgroundColor: Colors.white,
-        body: _listView(provider.shopList));
+        body: _listView(provider.shopList));*/
   }
 
   Widget _listView(List<Shop> list) {

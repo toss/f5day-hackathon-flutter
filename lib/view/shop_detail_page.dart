@@ -6,7 +6,7 @@ import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
-import 'package:style_book/widget/inapp_webview_page.dart';
+import 'package:style_book/view/inapp_webview_page.dart';
 
 import 'widget_builder.dart';
 
