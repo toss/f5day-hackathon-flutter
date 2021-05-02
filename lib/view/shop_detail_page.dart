@@ -198,13 +198,5 @@ class ShopState extends State<ShopDetailPage> {
   _launchUrl({required String url, String? title}) async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => InAppWebViewPage(url, title)));
-    //Navigator.pushReplacementNamed(context, routeName)
-    /*final validate = await canLaunch(url);
-    print("_launchUrl $url / $validate");
-    if (validate) {
-      await launch(url);
-    } else {
-      print("_launchUrl $url / $validate");
-    }*/
   }
 }
