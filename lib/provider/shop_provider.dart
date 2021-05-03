@@ -36,6 +36,17 @@ class ShopProvider with ChangeNotifier, DiagnosticableTreeMixin {
       _shopInfoStream.add(ItemDetailEvent(value, item));
     });
   }
+
+  String findShopName(Item item) {
+    if (shopList.isEmpty) {
+      return "";
+    }
+
+    return shopList.firstWhere((shop) {
+          return shop.nameId == item.shopNameId;
+        }).nameDisplay ??
+        "";
+  }
 }
 
 class ItemDetailEvent {

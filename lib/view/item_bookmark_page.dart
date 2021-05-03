@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:style_book/log/event_log.dart';
 import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/provider/shop_provider.dart';
+import 'package:style_book/util.dart';
 
 class ItemBookmarkPage extends StatefulWidget {
   @override
@@ -30,16 +31,15 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
 
     final shopProvider = Provider.of<ShopProvider>(context, listen: true);
 
+    final aspectRatio = MediaQuery.of(context).size.height /
+        (MediaQuery.of(context).size.height + 210);
+    print("aspectRatio $aspectRatio");
     return GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 1,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 12),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: aspectRatio, crossAxisCount: 2),
         itemCount: bookmarkItems.length,
         shrinkWrap: true,
         controller: ScrollController(),
-        padding: EdgeInsets.only(top: 8.0, bottom: 16.0),
         itemBuilder: (context, index) {
           final item = bookmarkItems[index];
           return InkWell(
@@ -49,14 +49,49 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
               shopProvider.requestShopInfo(item);
               // _launchUrl(url: item.postUrl ?? "", title: _shop.name);
             },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AnimatedSwitcher(
-                child: item.getFirstImage(),
-                duration: Duration(seconds: 1),
-              ),
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AnimatedSwitcher(
+                    child: item.getFirstImage(
+                        width: 160, height: 160, fit: BoxFit.fitWidth),
+                    duration: Duration(seconds: 1),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  child: Text(
+                    shopProvider.findShopName(item),
+                    style: TextStyle(fontSize: 16, color: Color(0xff333d4b)),
+                  ),
+                  width: 160,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                SizedBox(
+                  child: Text(
+                    "♥ ${likeToStringFormant(item.likes)}",
+                    style: TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
+                  ),
+                  width: 160,
+                ),
+              ],
             ),
           );
+
+          /* return InkWell(
+            onTap: () {
+              EventLog.sendEventLog("click_bookmark_item",
+                  eventProperties: {'item': item.toJson(item)});
+              shopProvider.requestShopInfo(item);
+              // _launchUrl(url: item.postUrl ?? "", title: _shop.name);
+            },
+            child: ,
+          );*/
         });
   }
 }

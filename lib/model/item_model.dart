@@ -51,13 +51,14 @@ class Item {
     }
   }
 
-  Widget? getFirstImage({BoxFit fit = BoxFit.fitHeight}) {
+  Widget? getFirstImage(
+      {double? width, double? height, BoxFit fit = BoxFit.fitHeight}) {
     final list = imageList();
     print("market image list $list");
     if (list.isEmpty) {
       return null;
     }
 
-    return Image.network(list[0], fit: fit);
+    return Image.network(list[0], width: width, height: height, fit: fit);
   }
 }
