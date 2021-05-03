@@ -2,6 +2,7 @@ import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:style_book/log/event_log.dart';
 import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/util.dart';
 
@@ -31,6 +32,10 @@ class ItemDetailState extends State<ItemDetailWidget> {
     super.initState();
     _bookmark =
         Provider.of<ItemProvider>(context, listen: false).isBookmark(_item);
+    EventLog.sendEventLog("view_item_detail_page", eventProperties: {
+      "item_id": _item.id,
+      "shop_name_id": _item.shopNameId
+    });
   }
 
   @override
@@ -111,7 +116,8 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 color: color, callback: () {
               setState(() {
                 _bookmark = !_bookmark;
-
+                EventLog.sendEventLog("click_bookmark",
+                    eventProperties: {"is_bookmark": _bookmark});
                 AdvertisingId.id(true).then((value) {
                   if (value != null) {
                     print("item bookmark userId : $value");
@@ -120,14 +126,17 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 });
               });
             }),
-            _imageTextButton(
+            //todo 나중에 추가
+            /* _imageTextButton(
                 'images/icon_chat_bubble_one_to_one_mono.png', "Câu hỏi",
-                color: Color(0xffb0b8c1), callback: () {}),
+                color: Color(0xffb0b8c1), callback: () {}),*/
             Flexible(
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
+                      EventLog.sendEventLog("item_detail_go_facebook",
+                          eventProperties: {"url": _item.url});
                       launchUrl(context,
                           url: _item.url ?? "", title: _shop.nameDisplay);
                     },

@@ -18,10 +18,10 @@ class ItemShowWindowPage extends StatelessWidget {
 
 class ItemShowWindowWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MarketRankState();
+  State<StatefulWidget> createState() => ItemShowWindowState();
 }
 
-class MarketRankState extends State<ItemShowWindowWidget> {
+class ItemShowWindowState extends State<ItemShowWindowWidget> {
   final _controller = ScrollController();
 
   // late StreamSubscription _event;
@@ -29,7 +29,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
   @override
   void initState() {
     super.initState();
-    print("MarketRankState initState");
+    print("ItemShowWindowState initState");
 
     Provider.of<ItemProvider>(context, listen: false).fetchShowWindowList();
     final shopProvider = Provider.of<ShopProvider>(context, listen: false);
@@ -91,8 +91,11 @@ class MarketRankState extends State<ItemShowWindowWidget> {
               final item = provider.showWindowList[index];
               return InkWell(
                   onTap: () {
-                    EventLog.sendEventLog("click_market_rank",
-                        eventProperties: {'item': item.toJson(item)});
+                    EventLog.sendEventLog("click_show_window_item",
+                        eventProperties: {
+                          'item_id': item.id,
+                          'shop_name_id': item.shopNameId
+                        });
                     shopProvider.requestShopInfo(item);
                     // _launchUrl(url: item.postUrl ?? "", title: _shop.name);
                   },

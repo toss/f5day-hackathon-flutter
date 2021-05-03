@@ -26,8 +26,6 @@ class _ShopListPageState extends State<ShopListPage> {
 
     final provider = Provider.of<ShopProvider>(context, listen: false);
     provider.getProductList();
-
-    EventLog.sendEventLog('app_open');
   }
 
   @override
@@ -65,7 +63,7 @@ class _ShopListPageState extends State<ShopListPage> {
     return InkWell(
       onTap: () {
         EventLog.sendEventLog("click_shop",
-            eventProperties: {'shop': shop.toJson(shop)});
+            eventProperties: {'shop_name_id': shop.nameId});
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ShopDetailPage(shop)));
       },

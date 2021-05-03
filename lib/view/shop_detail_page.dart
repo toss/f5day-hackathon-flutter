@@ -155,7 +155,7 @@ class ShopState extends State<ShopDetailPage> {
       return InkWell(
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
-              eventProperties: {'item': _shop.toJson(_shop)});
+              eventProperties: {'shop_name_id': _shop.nameId});
           launchUrl(context, url: _shop.url ?? "", title: _shop.nameDisplay);
         },
         //child: Image.network(_shop.imageBig ?? ""),
@@ -222,8 +222,10 @@ class ItemImageState extends State<ItemImageWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        EventLog.sendEventLog("click_item_detail_item",
-            eventProperties: {'item': _item.toJson(_item)});
+        EventLog.sendEventLog("click_item_detail_item", eventProperties: {
+          'item_id': _item.id,
+          'shop_name_id': _shop.nameId
+        });
         Navigator.push(context,
             MaterialPageRoute(builder: (c) => ItemDetailWidget(_shop, _item)));
         //_launchUrl(url: item.postUrl ?? "", title: _shop.name);

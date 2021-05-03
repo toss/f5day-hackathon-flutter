@@ -10,6 +10,8 @@ class EventLog {
     // Create the instance
 
     // Log an event
+    print(
+        "eventType : $eventType \n eventProperties : ${eventProperties.toString()}");
     _analytics.logEvent(eventType, eventProperties: eventProperties);
   }
 

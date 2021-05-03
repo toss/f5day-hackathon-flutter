@@ -47,8 +47,10 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
           final item = bookmarkItems[index];
           return InkWell(
             onTap: () {
-              EventLog.sendEventLog("click_bookmark_item",
-                  eventProperties: {'item': item.toJson(item)});
+              EventLog.sendEventLog("click_bookmark_item", eventProperties: {
+                'item_id': item.id,
+                'shop_name_id': item.shopNameId
+              });
               shopProvider.requestShopInfo(item);
               // _launchUrl(url: item.postUrl ?? "", title: _shop.name);
             },

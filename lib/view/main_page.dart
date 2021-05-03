@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:style_book/log/event_log.dart';
 import 'package:style_book/provider/shop_provider.dart';
 import 'package:style_book/view/item_bookmark_page.dart';
 import 'package:style_book/view/item_show_window_page.dart';
@@ -13,6 +14,7 @@ import 'item_detail_page.dart';
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    EventLog.sendEventLog('app_open');
     return MaterialApp(
         theme: ThemeData(
           primaryColor: Colors.white,
@@ -62,6 +64,7 @@ class MainPageState extends State<MainPageHome> {
 
   @override
   Widget build(BuildContext context) {
+    print("MainPageState build");
     return Scaffold(
         appBar: AppBar(
           title: _onTapTitle(_selectedIndex),
@@ -84,14 +87,22 @@ class MainPageState extends State<MainPageHome> {
   }
 
   Widget? _onTapTitle(int index) {
+    String title;
     switch (index) {
       case 0:
-        return Text("Mua sắm");
+        title = "Mua sắm";
+        break;
       case 1:
-        return Text("TOP 50  trang mua sắm");
+        title = "TOP 50  trang mua sắm";
+        break;
       case 2:
-        return Text("Đánh dấu");
+        title = "Đánh dấu";
+        break;
+      default:
+        return null;
     }
-    return null;
+    EventLog.sendEventLog("dashboard", eventProperties: {"label": title});
+
+    return Text(title);
   }
 }
