@@ -203,7 +203,7 @@ class ItemImageState extends State<ItemImageWidget> {
 
   @override
   void initState() {
-    _timer = Timer.periodic(new Duration(seconds: 5), (callback) {
+    _timer = Timer.periodic(new Duration(seconds: 3), (callback) {
       setState(() {
         _index = (_index + 1) % _item.imageList().length;
       });
