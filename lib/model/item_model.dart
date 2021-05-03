@@ -43,9 +43,11 @@ class Item {
     }
   }
 
-  Widget? getImageWidget(int index, {BoxFit fit = BoxFit.fill}) {
+  Widget? getImageWidget(int index,
+      {double? width, double? height, BoxFit fit = BoxFit.fill}) {
     try {
-      return Image.network(imageList()[index], fit: fit);
+      return Image.network(imageList()[index],
+          width: width, height: height, fit: fit);
     } catch (e) {
       return null;
     }

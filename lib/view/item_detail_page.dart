@@ -107,8 +107,8 @@ class ItemDetailState extends State<ItemDetailWidget> {
       child: Container(
         child: Row(
           children: [
-            _imageTextButton('images/icon_star_mono.png', "Like", color: color,
-                callback: () {
+            _imageTextButton('images/icon_star_mono.png', "Đánh dấu",
+                color: color, callback: () {
               setState(() {
                 _bookmark = !_bookmark;
 
@@ -121,7 +121,7 @@ class ItemDetailState extends State<ItemDetailWidget> {
               });
             }),
             _imageTextButton(
-                'images/icon_chat_bubble_one_to_one_mono.png', "Contacts",
+                'images/icon_chat_bubble_one_to_one_mono.png', "Câu hỏi",
                 color: Color(0xffb0b8c1), callback: () {}),
             Flexible(
               child: SizedBox(
@@ -132,7 +132,7 @@ class ItemDetailState extends State<ItemDetailWidget> {
                           url: _item.url ?? "", title: _shop.nameDisplay);
                     },
                     style: ElevatedButton.styleFrom(primary: Color(0xffff5e9b)),
-                    child: Text("쇼핑몰로 이동")),
+                    child: Text("Đến trang bán")),
               ),
               flex: 2,
             )

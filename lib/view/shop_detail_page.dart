@@ -100,10 +100,7 @@ class ShopState extends State<ShopDetailPage> {
         controller: _controller,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
-              child: _listHeader(isLoading),
-            );
+            return _listHeader(isLoading) ?? SizedBox();
           } else if (index == 2) {
             if (isLoading) {
               return SizedBox(height: 16);
@@ -122,10 +119,7 @@ class ShopState extends State<ShopDetailPage> {
               ),
             );
           } else {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: _itemGridView(items),
-            );
+            return _itemGridView(items);
           }
         });
   }
@@ -134,10 +128,15 @@ class ShopState extends State<ShopDetailPage> {
     if (itemPreviewEmpty) {
       return null;
     }
-    return Text(
-      "Top 10",
-      style: TextStyle(
-          fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xffFF5e9b)),
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 66.0),
+      child: Text(
+        "Sản phẩm nổi bật tuần này",
+        style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff333d4b)),
+      ),
     );
   }
 
@@ -162,37 +161,22 @@ class ShopState extends State<ShopDetailPage> {
         //child: Image.network(_shop.imageBig ?? ""),
       );
     }
+    final aspectRatio = MediaQuery.of(context).size.height /
+        (MediaQuery.of(context).size.height + 210);
+
     return GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 1,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 12),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: aspectRatio,
+        ),
         itemCount: items.length,
+        padding:
+            EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0, bottom: 8.0),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final item = items[index];
           return ItemImageWidget(_shop, item);
-          /*InkWell(
-            onTap: () {
-              EventLog.sendEventLog("click_item",
-                  eventProperties: {'item': item.toJson(item)});
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (c) => ItemDetailWidget(_shop, item)));
-              //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AnimatedSwitcher(
-                child: _images(item),
-                duration: Duration(seconds: 1),
-              ),
-            ),
-          )*/
-          ;
         });
   }
 }
@@ -236,30 +220,49 @@ class ItemImageState extends State<ItemImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return InkWell(
       onTap: () {
-        EventLog.sendEventLog("click_item",
+        EventLog.sendEventLog("click_item_detail_item",
             eventProperties: {'item': _item.toJson(_item)});
         Navigator.push(context,
             MaterialPageRoute(builder: (c) => ItemDetailWidget(_shop, _item)));
         //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: AnimatedSwitcher(
-          child: _images(_item.imageList()[_index]),
-          duration: Duration(seconds: 1),
-        ),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: AnimatedSwitcher(
+              child: _item.getImageWidget(_index,
+                  width: 160, height: 160, fit: BoxFit.fitWidth),
+              duration: Duration(seconds: 1),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            child: Text(
+              _shop.nameDisplay ?? "",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff333d4b)),
+            ),
+            width: 160,
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          SizedBox(
+            child: Text(
+              "♥ ${likeToStringFormant(_item.likes)}",
+              style: TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
+            ),
+            width: 160,
+          ),
+        ],
       ),
     );
-  }
-
-  Widget? _images(String image) {
-    if (image.isEmpty) {
-      return null;
-    }
-
-    return Image.network(image, fit: BoxFit.fitHeight);
   }
 }

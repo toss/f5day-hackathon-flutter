@@ -33,12 +33,15 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
 
     final aspectRatio = MediaQuery.of(context).size.height /
         (MediaQuery.of(context).size.height + 210);
+
     print("aspectRatio $aspectRatio");
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: aspectRatio, crossAxisCount: 2),
         itemCount: bookmarkItems.length,
         shrinkWrap: true,
+        padding:
+            EdgeInsets.only(left: 20.0, right: 20.0, top: 40.0, bottom: 8.0),
         controller: ScrollController(),
         itemBuilder: (context, index) {
           final item = bookmarkItems[index];
@@ -65,7 +68,10 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
                 SizedBox(
                   child: Text(
                     shopProvider.findShopName(item),
-                    style: TextStyle(fontSize: 16, color: Color(0xff333d4b)),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff333d4b)),
                   ),
                   width: 160,
                 ),
@@ -82,16 +88,6 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
               ],
             ),
           );
-
-          /* return InkWell(
-            onTap: () {
-              EventLog.sendEventLog("click_bookmark_item",
-                  eventProperties: {'item': item.toJson(item)});
-              shopProvider.requestShopInfo(item);
-              // _launchUrl(url: item.postUrl ?? "", title: _shop.name);
-            },
-            child: ,
-          );*/
         });
   }
 }

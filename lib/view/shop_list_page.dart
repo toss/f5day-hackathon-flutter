@@ -83,8 +83,6 @@ class _ShopListPageState extends State<ShopListPage> {
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             child: Text(
@@ -95,36 +93,25 @@ class _ShopListPageState extends State<ShopListPage> {
                   fontSize: 20),
             ),
           ),
-          Container(
-              padding: EdgeInsets.only(left: 8.0, right: 8.0),
-              width: 120,
-              child: WidgetUtils.shopPicture(shop.imageProfile ?? "")),
+          SizedBox(
+            width: 8,
+          ),
+          WidgetUtils.shopPicture(shop.imageProfile ?? "",
+              width: 72, height: 72),
+          SizedBox(
+            width: 12,
+          ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.only(top: 2),
-                child: Text(shop.nameDisplay ?? "",
-                    style: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 4),
-                child: Text(
-                  shop.nameDisplay ?? "",
-                  style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 12),
-                child: Text(
-                  "♥ ${shop.likesToString()}",
-                  style: TextStyle(color: Color(0xffff5e9b)),
-                ),
+              Text(shop.nameDisplay ?? "",
+                  style: TextStyle(
+                    color: Colors.grey.shade800,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  )),
+              Text(
+                "♥ ${shop.likesToString()}",
+                style: TextStyle(color: Color(0xffff5e9b)),
               )
             ],
           )
