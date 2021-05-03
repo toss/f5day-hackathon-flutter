@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:style_book/provider/shop_provider.dart';
+import 'package:style_book/view/item_bookmark_page.dart';
 import 'package:style_book/view/item_show_window_page.dart';
 import 'package:style_book/view/shop_list_page.dart';
 import 'package:style_book/view/widget_component.dart';
+
+import 'item_detail_widget.dart';
 
 class MainPage extends StatelessWidget {
   @override
@@ -21,11 +28,23 @@ class MainPageHome extends StatefulWidget {
 
 class MainPageState extends State<MainPageHome> {
   int _selectedIndex = 0;
+  late StreamSubscription _event;
 
   @override
   void initState() {
     print("MainPageState initState");
     super.initState();
+    final shopProvider = Provider.of<ShopProvider>(context, listen: false);
+    _event = shopProvider.shopInfoStream.asBroadcastStream().listen((event) {
+      print("MarketRankState listen $event");
+      if (event == null) {
+        return;
+      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (c) => ItemDetailWidget(event.shop, event.item)));
+    });
   }
 
   @override
@@ -36,6 +55,7 @@ class MainPageState extends State<MainPageHome> {
 
   @override
   void dispose() {
+    _event.cancel();
     print("MainPageState dispose");
     super.dispose();
   }
@@ -53,7 +73,7 @@ class MainPageState extends State<MainPageHome> {
         }),
         body: IndexedStack(
           index: _selectedIndex,
-          children: [ItemShowWindowPage(), ShopListPage(), ShopListPage()],
+          children: [ItemShowWindowPage(), ShopListPage(), ItemBookmarkPage()],
         ));
   }
 
@@ -64,11 +84,13 @@ class MainPageState extends State<MainPageHome> {
   }
 
   Widget? _onTapTitle(int index) {
-    if (index == 0) {
-      return Text("모아보기");
-    }
-    if (index == 1) {
-      return Text("TOP 50  trang mua sắm");
+    switch (index) {
+      case 0:
+        return Text("Mua sắm");
+      case 1:
+        return Text("TOP 50  trang mua sắm");
+      case 2:
+        return Text("Đánh dấu");
     }
     return null;
   }

@@ -1,12 +1,9 @@
-import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:style_book/log/event_log.dart';
-import 'package:style_book/model/item_model.dart';
 import 'package:style_book/provider/item_provider.dart';
-import 'package:style_book/view/item_detail_widget.dart';
 
 import '../provider/shop_provider.dart';
 
@@ -27,7 +24,7 @@ class ItemShowWindowWidget extends StatefulWidget {
 class MarketRankState extends State<ItemShowWindowWidget> {
   final _controller = ScrollController();
 
-  late StreamSubscription _event;
+  // late StreamSubscription _event;
 
   @override
   void initState() {
@@ -36,31 +33,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
 
     Provider.of<ItemProvider>(context, listen: false).fetchShowWindowList();
     final shopProvider = Provider.of<ShopProvider>(context, listen: false);
-
-    /* shopProvider.shopInfoStream.asBroadcastStream(onListen: (event) {
-      print("MarketRankState onlisten $event");
-      event.onData((data) {
-        print("MarketRankState broadcast $data");
-        if (data == null) {
-          return;
-        }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (c) => ItemDetailWidget(data.shop, data.item)));
-      });
-    });*/
-    _event = shopProvider.shopInfoStream.asBroadcastStream().listen((event) {
-      print("MarketRankState listen $event");
-      if (event == null) {
-        return;
-      }
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (c) => ItemDetailWidget(event.shop, event.item)));
-    });
-    /* shopProvider.shopInfoStream.listen((event) {
+    /* _event = shopProvider.shopInfoStream.asBroadcastStream().listen((event) {
       print("MarketRankState listen $event");
       if (event == null) {
         return;
@@ -75,7 +48,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
   @override
   void dispose() {
     print("MarketRankState dispose");
-    _event.cancel();
+//    _event.cancel();
     super.dispose();
   }
 
@@ -115,7 +88,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: AnimatedSwitcher(
-                    child: _getImage(item),
+                    child: item.getFirstImage(),
                     duration: Duration(seconds: 1),
                   ),
                 ),
@@ -127,7 +100,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
     );
   }
 
-  Widget? _getImage(Item item) {
+/*  Widget? _getImage(Item item) {
     final list = item.imageList();
     print("market image list $list");
     if (list.isEmpty) {
@@ -135,5 +108,5 @@ class MarketRankState extends State<ItemShowWindowWidget> {
     }
 
     return Image.network(list[0], fit: BoxFit.fitHeight);
-  }
+  }*/
 }

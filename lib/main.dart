@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:style_book/api/bookmark_api.dart';
 import 'package:style_book/api/item_api.dart';
 import 'package:style_book/api/shop_api.dart';
 import 'package:style_book/provider/item_provider.dart';
@@ -97,7 +98,8 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ShopProvider(ShopApi())),
-      ChangeNotifierProvider(create: (_) => ItemProvider(ItemApi()))
+      ChangeNotifierProvider(
+          create: (_) => ItemProvider(ItemApi(), BookmarkApi()))
     ],
     child: MyApp(),
   ));

@@ -1,5 +1,8 @@
+import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/util.dart';
 
 import '../model/item_model.dart';
@@ -41,38 +44,38 @@ class ItemDetailState extends State<ItemDetailWidget> {
               )),
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-            if (index == 0) {
-              return Container(
-                padding: EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    Row(
+                if (index == 0) {
+                  return Container(
+                    padding: EdgeInsets.all(24.0),
+                    child: Column(
                       children: [
-                        Image.network(
-                          _shop.imageProfile ?? "",
-                          width: 54.0,
-                          height: 54.0,
-                          fit: BoxFit.contain,
-                        ),
-                        Column(
+                        Row(
                           children: [
-                            Text(_shop.nameId ?? ""),
-                            Text(_item.time)
+                            Image.network(
+                              _shop.imageProfile ?? "",
+                              width: 54.0,
+                              height: 54.0,
+                              fit: BoxFit.contain,
+                            ),
+                            Column(
+                              children: [
+                                Text(_shop.nameId ?? ""),
+                                Text(_item.time)
+                              ],
+                            )
                           ],
-                        )
+                        ),
+                        Text(_item.text ?? "")
                       ],
                     ),
-                    Text(_item.text ?? "")
-                  ],
-                ),
-              );
-            } else {
-              return Container(
-                padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
-                child: _item.getImageWidget(index),
-              );
-            }
-          }, childCount: _item.imageList().length + 1))
+                  );
+                } else {
+                  return Container(
+                    padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
+                    child: _item.getImageWidget(index),
+                  );
+                }
+              }, childCount: _item.imageList().length + 1))
         ],
       ),
     );
@@ -86,6 +89,8 @@ class ItemDetailState extends State<ItemDetailWidget> {
       color = Color(0xffb0b8c1);
     }
 
+    final provider = Provider.of<ItemProvider>(context);
+
     return Container(
       height: 84.0,
       padding: EdgeInsets.all(16.0),
@@ -97,10 +102,17 @@ class ItemDetailState extends State<ItemDetailWidget> {
           children: [
             _imageTextButton('images/icon_star_mono.png', "Like", color: color,
                 callback: () {
-              setState(() {
-                _bookmark = !_bookmark;
+                  setState(() {
+                    _bookmark = !_bookmark;
+
+                AdvertisingId.id(true).then((value) {
+                  if (value != null) {
+                    print("item bookmark userId : $value");
+                    provider.updateBookmark(value, _item.id, _bookmark);
+                  }
+                });
               });
-            }),
+                }),
             _imageTextButton(
                 'images/icon_chat_bubble_one_to_one_mono.png', "Contacts",
                 color: Color(0xffb0b8c1), callback: () {}),

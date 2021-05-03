@@ -11,8 +11,6 @@ class Item {
 
   Map<String, dynamic> toJson(instance) => _$ItemToJson(this);
 
-  @JsonKey(name: 'userId')
-  String? userId;
   @JsonKey(name: 'post_id')
   int? postId;
   @JsonKey(name: 'images')
@@ -27,12 +25,14 @@ class Item {
   String time;
   @JsonKey(name: 'shop_name_id')
   String shopNameId;
+  @JsonKey(name: 'id')
+  int id;
 
 /*  @JsonKey(name: 'comment')
   List<dynamic>? comment;*/
 
-  Item(this.userId, this.postId, this.images, this.text, this.url, this.likes,
-      this.time, this.shopNameId);
+  Item(this.postId, this.images, this.text, this.url, this.likes, this.time,
+      this.shopNameId, this.id);
 
   List<String> imageList() {
     try {
@@ -49,5 +49,15 @@ class Item {
     } catch (e) {
       return null;
     }
+  }
+
+  Widget? getFirstImage({BoxFit fit = BoxFit.fitHeight}) {
+    final list = imageList();
+    print("market image list $list");
+    if (list.isEmpty) {
+      return null;
+    }
+
+    return Image.network(list[0], fit: fit);
   }
 }
