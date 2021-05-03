@@ -9,7 +9,7 @@ import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/util.dart';
-import 'package:style_book/view/item_detail_widget.dart';
+import 'package:style_book/view/item_detail_page.dart';
 
 import 'widget_builder.dart';
 

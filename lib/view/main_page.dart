@@ -8,7 +8,7 @@ import 'package:style_book/view/item_show_window_page.dart';
 import 'package:style_book/view/shop_list_page.dart';
 import 'package:style_book/view/widget_component.dart';
 
-import 'item_detail_widget.dart';
+import 'item_detail_page.dart';
 
 class MainPage extends StatelessWidget {
   @override

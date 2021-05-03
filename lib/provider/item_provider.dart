@@ -69,5 +69,13 @@ class ItemProvider with ChangeNotifier, DiagnosticableTreeMixin {
     });
 
     _bookmarkItemList = bookmarkItems.toList();
+    notifyListeners();
+  }
+
+  bool isBookmark(Item item) {
+    return _bookmarkItemList?.any((element) {
+          return element.id == item.id;
+        }) ??
+        false;
   }
 }

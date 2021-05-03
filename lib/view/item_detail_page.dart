@@ -27,6 +27,13 @@ class ItemDetailState extends State<ItemDetailWidget> {
   ItemDetailState(this._shop, this._item);
 
   @override
+  void initState() {
+    super.initState();
+    _bookmark =
+        Provider.of<ItemProvider>(context, listen: false).isBookmark(_item);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: _bottomNavigation(),
@@ -44,38 +51,38 @@ class ItemDetailState extends State<ItemDetailWidget> {
               )),
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                if (index == 0) {
-                  return Container(
-                    padding: EdgeInsets.all(24.0),
-                    child: Column(
+            if (index == 0) {
+              return Container(
+                padding: EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Image.network(
-                              _shop.imageProfile ?? "",
-                              width: 54.0,
-                              height: 54.0,
-                              fit: BoxFit.contain,
-                            ),
-                            Column(
-                              children: [
-                                Text(_shop.nameId ?? ""),
-                                Text(_item.time)
-                              ],
-                            )
-                          ],
+                        Image.network(
+                          _shop.imageProfile ?? "",
+                          width: 54.0,
+                          height: 54.0,
+                          fit: BoxFit.contain,
                         ),
-                        Text(_item.text ?? "")
+                        Column(
+                          children: [
+                            Text(_shop.nameId ?? ""),
+                            Text(_item.time)
+                          ],
+                        )
                       ],
                     ),
-                  );
-                } else {
-                  return Container(
-                    padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
-                    child: _item.getImageWidget(index),
-                  );
-                }
-              }, childCount: _item.imageList().length + 1))
+                    Text(_item.text ?? "")
+                  ],
+                ),
+              );
+            } else {
+              return Container(
+                padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
+                child: _item.getImageWidget(index),
+              );
+            }
+          }, childCount: _item.imageList().length + 1))
         ],
       ),
     );
@@ -102,8 +109,8 @@ class ItemDetailState extends State<ItemDetailWidget> {
           children: [
             _imageTextButton('images/icon_star_mono.png', "Like", color: color,
                 callback: () {
-                  setState(() {
-                    _bookmark = !_bookmark;
+              setState(() {
+                _bookmark = !_bookmark;
 
                 AdvertisingId.id(true).then((value) {
                   if (value != null) {
@@ -112,7 +119,7 @@ class ItemDetailState extends State<ItemDetailWidget> {
                   }
                 });
               });
-                }),
+            }),
             _imageTextButton(
                 'images/icon_chat_bubble_one_to_one_mono.png', "Contacts",
                 color: Color(0xffb0b8c1), callback: () {}),

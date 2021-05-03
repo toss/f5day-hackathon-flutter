@@ -62,7 +62,7 @@ class MarketRankState extends State<ItemShowWindowWidget> {
         if (index == 0) {
           return Container(
             padding: EdgeInsets.all(24.0),
-            child: Text("인기순"),
+            child: Text("Xem xếp hạng"),
           );
         }
 

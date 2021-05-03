@@ -26,9 +26,9 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
   @override
   Widget build(BuildContext context) {
     final bookmarkItems =
-        Provider.of<ItemProvider>(context, listen: false).bookmarkItemList;
+        Provider.of<ItemProvider>(context, listen: true).bookmarkItemList;
 
-    final shopProvider = Provider.of<ShopProvider>(context, listen: false);
+    final shopProvider = Provider.of<ShopProvider>(context, listen: true);
 
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
