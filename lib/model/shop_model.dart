@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:style_book/util.dart';
 
 part 'shop_model.g.dart';
 
@@ -30,6 +30,6 @@ class Shop {
       this.created, this.updated, this.url);
 
   String likesToString() {
-    return NumberFormat.decimalPattern("vi").format(likes).toString();
+    return likeToStringFormant(likes);
   }
 }

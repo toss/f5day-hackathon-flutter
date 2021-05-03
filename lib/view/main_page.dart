@@ -1,11 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:style_book/view/market_rank_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:style_book/log/event_log.dart';
+import 'package:style_book/provider/shop_provider.dart';
+import 'package:style_book/view/item_bookmark_page.dart';
+import 'package:style_book/view/item_show_window_page.dart';
 import 'package:style_book/view/shop_list_page.dart';
 import 'package:style_book/view/widget_component.dart';
+
+import 'item_detail_page.dart';
 
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    EventLog.sendEventLog('app_open');
     return MaterialApp(
         theme: ThemeData(
           primaryColor: Colors.white,
@@ -21,9 +30,41 @@ class MainPageHome extends StatefulWidget {
 
 class MainPageState extends State<MainPageHome> {
   int _selectedIndex = 0;
+  late StreamSubscription _event;
+
+  @override
+  void initState() {
+    print("MainPageState initState");
+    super.initState();
+    final shopProvider = Provider.of<ShopProvider>(context, listen: false);
+    _event = shopProvider.shopInfoStream.asBroadcastStream().listen((event) {
+      print("MarketRankState listen $event");
+      if (event == null) {
+        return;
+      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (c) => ItemDetailWidget(event.shop, event.item)));
+    });
+  }
+
+  @override
+  void deactivate() {
+    print("MainPageState deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    _event.cancel();
+    print("MainPageState dispose");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("MainPageState build");
     return Scaffold(
         appBar: AppBar(
           title: _onTapTitle(_selectedIndex),
@@ -35,11 +76,7 @@ class MainPageState extends State<MainPageHome> {
         }),
         body: IndexedStack(
           index: _selectedIndex,
-          children: [
-            ShopListPage(),
-            MarketRankStatelessWidget(),
-            ShopListPage()
-          ],
+          children: [ItemShowWindowPage(), ShopListPage(), ItemBookmarkPage()],
         ));
   }
 
@@ -50,9 +87,22 @@ class MainPageState extends State<MainPageHome> {
   }
 
   Widget? _onTapTitle(int index) {
-    if (index != 0) {
-      return null;
+    String title;
+    switch (index) {
+      case 0:
+        title = "Mua sắm";
+        break;
+      case 1:
+        title = "TOP 50  trang mua sắm";
+        break;
+      case 2:
+        title = "Đánh dấu";
+        break;
+      default:
+        return null;
     }
-    return Text("Seller TOP 50");
+    EventLog.sendEventLog("dashboard", eventProperties: {"label": title});
+
+    return Text(title);
   }
 }

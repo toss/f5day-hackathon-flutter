@@ -1,5 +1,9 @@
+import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:style_book/log/event_log.dart';
+import 'package:style_book/provider/item_provider.dart';
 import 'package:style_book/util.dart';
 
 import '../model/item_model.dart';
@@ -22,6 +26,17 @@ class ItemDetailState extends State<ItemDetailWidget> {
   bool _bookmark = false;
 
   ItemDetailState(this._shop, this._item);
+
+  @override
+  void initState() {
+    super.initState();
+    _bookmark =
+        Provider.of<ItemProvider>(context, listen: false).isBookmark(_item);
+    EventLog.sendEventLog("view_item_detail_page", eventProperties: {
+      "item_id": _item.id,
+      "shop_name_id": _item.shopNameId
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +101,8 @@ class ItemDetailState extends State<ItemDetailWidget> {
       color = Color(0xffb0b8c1);
     }
 
+    final provider = Provider.of<ItemProvider>(context);
+
     return Container(
       height: 84.0,
       padding: EdgeInsets.all(16.0),
@@ -95,25 +112,36 @@ class ItemDetailState extends State<ItemDetailWidget> {
       child: Container(
         child: Row(
           children: [
-            _imageTextButton('images/icon_star_mono.png', "Like", color: color,
-                callback: () {
+            _imageTextButton('images/icon_star_mono.png', "Đánh dấu",
+                color: color, callback: () {
               setState(() {
                 _bookmark = !_bookmark;
+                EventLog.sendEventLog("click_bookmark",
+                    eventProperties: {"is_bookmark": _bookmark});
+                AdvertisingId.id(true).then((value) {
+                  if (value != null) {
+                    print("item bookmark userId : $value");
+                    provider.updateBookmark(value, _item.id, _bookmark);
+                  }
+                });
               });
             }),
-            _imageTextButton(
-                'images/icon_chat_bubble_one_to_one_mono.png', "Contacts",
-                color: Color(0xffb0b8c1), callback: () {}),
+            //todo 나중에 추가
+            /* _imageTextButton(
+                'images/icon_chat_bubble_one_to_one_mono.png', "Câu hỏi",
+                color: Color(0xffb0b8c1), callback: () {}),*/
             Flexible(
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
+                      EventLog.sendEventLog("item_detail_go_facebook",
+                          eventProperties: {"url": _item.url});
                       launchUrl(context,
                           url: _item.url ?? "", title: _shop.nameDisplay);
                     },
                     style: ElevatedButton.styleFrom(primary: Color(0xffff5e9b)),
-                    child: Text("쇼핑몰로 이동")),
+                    child: Text("Đến trang bán")),
               ),
               flex: 2,
             )
