@@ -25,15 +25,15 @@ Widget MainBottomNavigationBar(int selectedIndex, ValueChanged<int> callback) {
             BottomNavigationBarItem(
                 activeIcon: item('images/tab1_active.png'),
                 icon: item('images/tab1_inactive.png'),
-                label: "모아보기"),
+                label: "Mua sắm"),
             BottomNavigationBarItem(
                 activeIcon: item('images/tab2_active.png'),
                 icon: item('images/tab2_inactive.png'),
-                label: "마켓 랭킹"),
+                label: "Xếp hạng"),
             BottomNavigationBarItem(
                 activeIcon: item('images/tab3_active.png'),
                 icon: item('images/tab3_inactive.png'),
-                label: "찜한 상품")
+                label: "Đánh dấu")
           ],
           selectedItemColor: Color(0xff4E5968),
           unselectedItemColor: Color(0xff8B95A1),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -6,7 +8,8 @@ import 'package:style_book/log/event_log.dart';
 import 'package:style_book/model/item_model.dart';
 import 'package:style_book/model/shop_model.dart';
 import 'package:style_book/provider/item_provider.dart';
-import 'package:style_book/view/inapp_webview_page.dart';
+import 'package:style_book/util.dart';
+import 'package:style_book/view/item_detail_page.dart';
 
 import 'widget_builder.dart';
 
@@ -30,7 +33,7 @@ class ShopState extends State<ShopDetailPage> {
   void initState() {
     super.initState();
     final provider = Provider.of<ItemProvider>(context, listen: false);
-    provider.getItemList(_shop.userName ?? "");
+    provider.getItemList(_shop.nameId ?? "");
   }
 
   @override
@@ -65,18 +68,18 @@ class ShopState extends State<ShopDetailPage> {
     return Container(
         child: Column(
       children: [
-        WidgetUtils.shopPicture(_shop.image ?? ""),
+        WidgetUtils.shopPicture(_shop.imageProfile ?? ""),
         Container(
           margin: EdgeInsets.only(top: 24),
           child: Text(
-            _shop.userName ?? "",
+            _shop.nameDisplay ?? "",
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
           ),
         ),
         Container(
           margin: EdgeInsets.only(top: 6, bottom: 6),
           child: Text(
-            _shop.name ?? "",
+            _shop.nameId ?? "",
             style: TextStyle(fontSize: 24, color: Colors.grey.shade800),
           ),
         ),
@@ -97,10 +100,7 @@ class ShopState extends State<ShopDetailPage> {
         controller: _controller,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
-              child: _listHeader(isLoading),
-            );
+            return _listHeader(isLoading) ?? SizedBox();
           } else if (index == 2) {
             if (isLoading) {
               return SizedBox(height: 16);
@@ -112,16 +112,14 @@ class ShopState extends State<ShopDetailPage> {
                 onPressed: () {
                   EventLog.sendEventLog("click_facebook",
                       eventProperties: {'item': _shop.toJson(_shop)});
-                  _launchUrl(url: _shop.url ?? "", title: _shop.name);
+                  launchUrl(context,
+                      url: _shop.url ?? "", title: _shop.nameDisplay);
                 },
                 child: Text("Go to Facebook"),
               ),
             );
           } else {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: _itemGridView(items),
-            );
+            return _itemGridView(items);
           }
         });
   }
@@ -130,10 +128,15 @@ class ShopState extends State<ShopDetailPage> {
     if (itemPreviewEmpty) {
       return null;
     }
-    return Text(
-      "Top 10",
-      style: TextStyle(
-          fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xffFF5e9b)),
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 66.0),
+      child: Text(
+        "Sản phẩm nổi bật tuần này",
+        style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff333d4b)),
+      ),
     );
   }
 
@@ -148,55 +151,120 @@ class ShopState extends State<ShopDetailPage> {
       );
     }
 
-    if (items.any((element) => element.postUrl == null)) {
+    if (items.any((element) => element.url == null)) {
       return InkWell(
         onTap: () {
           EventLog.sendEventLog("click_item_preview_empty",
-              eventProperties: {'item': _shop.toJson(_shop)});
-          _launchUrl(url: _shop.url ?? "", title: _shop.name);
+              eventProperties: {'shop_name_id': _shop.nameId});
+          launchUrl(context, url: _shop.url ?? "", title: _shop.nameDisplay);
         },
         //child: Image.network(_shop.imageBig ?? ""),
       );
     }
+    final aspectRatio = MediaQuery.of(context).size.height /
+        (MediaQuery.of(context).size.height + 210);
+
     return GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 1,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 12),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: aspectRatio,
+        ),
         itemCount: items.length,
+        padding:
+            EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0, bottom: 8.0),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final item = items[index];
-          return InkWell(
-            onTap: () {
-              EventLog.sendEventLog("click_item",
-                  eventProperties: {'item': item.toJson(item)});
-              _launchUrl(url: item.postUrl ?? "", title: _shop.name);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AnimatedSwitcher(
-                child: _images(item),
-                duration: Duration(seconds: 1),
-              ),
-            ),
-          );
+          return ItemImageWidget(_shop, item);
         });
   }
+}
 
-  Widget? _images(Item item) {
-    final images = item.imageList();
+class ItemImageWidget extends StatefulWidget {
+  final Item _item;
+  final Shop _shop;
 
-    if (images.isEmpty) {
-      return null;
-    }
-    return Image.network(images[0], fit: BoxFit.fitHeight);
+  ItemImageWidget(this._shop, this._item);
+
+  @override
+  State<StatefulWidget> createState() => ItemImageState(_shop, _item);
+}
+
+class ItemImageState extends State<ItemImageWidget> {
+  Item _item;
+  Shop _shop;
+
+  late Timer _timer;
+
+  int _index = 0;
+
+  ItemImageState(this._shop, this._item);
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(new Duration(seconds: 3), (callback) {
+      setState(() {
+        _index = (_index + 1) % _item.imageList().length;
+      });
+    });
+
+    super.initState();
   }
 
-  _launchUrl({required String url, String? title}) async {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => InAppWebViewPage(url, title)));
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        EventLog.sendEventLog("click_item_detail_item", eventProperties: {
+          'item_id': _item.id,
+          'shop_name_id': _shop.nameId
+        });
+        Navigator.push(context,
+            MaterialPageRoute(builder: (c) => ItemDetailWidget(_shop, _item)));
+        //_launchUrl(url: item.postUrl ?? "", title: _shop.name);
+      },
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: AnimatedSwitcher(
+              child: _item.getImageWidget(_index,
+                  width: 160, height: 160, fit: BoxFit.fitWidth),
+              duration: Duration(seconds: 1),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            child: Text(
+              _shop.nameDisplay ?? "",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff333d4b)),
+            ),
+            width: 160,
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          SizedBox(
+            child: Text(
+              "♥ ${likeToStringFormant(_item.likes)}",
+              style: TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
+            ),
+            width: 160,
+          ),
+        ],
+      ),
+    );
   }
 }
