@@ -51,7 +51,32 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 children: [
                   Positioned.fill(
                       child: _item.getImageWidget(0, fit: BoxFit.fitWidth) ??
-                          Placeholder())
+                          Placeholder()),
+                  Positioned.fill(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            height: 80,
+                            padding: EdgeInsets.only(right: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                      Color(0x40000000),
+                                      Color(0x00000000)
+                                    ],
+                                    tileMode: TileMode.clamp)),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                "♥ ${likeToStringFormant(_item.likes)}",
+                                style: TextStyle(
+                                    fontSize: 16, color: Color(0xffffffff)),
+                              ),
+                            ),
+                          )))
                 ],
               )),
           SliverList(
@@ -94,13 +119,6 @@ class ItemDetailState extends State<ItemDetailWidget> {
   }
 
   Widget _bottomNavigation() {
-    final color;
-    if (_bookmark) {
-      color = Color(0xffff5e9b);
-    } else {
-      color = Color(0xffb0b8c1);
-    }
-
     final provider = Provider.of<ItemProvider>(context);
 
     return Container(
@@ -113,7 +131,7 @@ class ItemDetailState extends State<ItemDetailWidget> {
         child: Row(
           children: [
             _imageTextButton('images/icon_star_mono.png', "Đánh dấu",
-                color: color, callback: () {
+                color: bookmarkColor(_bookmark), callback: () {
               setState(() {
                 _bookmark = !_bookmark;
                 EventLog.sendEventLog("click_bookmark",
@@ -126,6 +144,9 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 });
               });
             }),
+            SizedBox(
+              width: 24,
+            ),
             //todo 나중에 추가
             /* _imageTextButton(
                 'images/icon_chat_bubble_one_to_one_mono.png', "Câu hỏi",

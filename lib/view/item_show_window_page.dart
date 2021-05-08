@@ -47,7 +47,7 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ItemProvider>(context);
+    final itemProvider = Provider.of<ItemProvider>(context);
     final shopProvider = Provider.of<ShopProvider>(context);
 
     return ListView.builder(
@@ -63,25 +63,33 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
             (MediaQuery.of(context).size.height + 300);
 
         var axisCount = 3;
-        if (provider.showWindowList.length < 3) {
+        if (itemProvider.showWindowList.length < 3) {
           axisCount = 2;
         }
 
+        final itemCount = itemProvider.showWindowList.length;
+
         var imageSize = 108.0;
-        if (provider.showWindowList.length < 3) {
+        var bookmarkDimHeight = 26.0;
+        var bookmarkSize = 16.0;
+        var bookmarkRightPadding = 6.0;
+        if (itemCount < 3) {
           imageSize = 160.0;
+          bookmarkDimHeight = 38.0;
+          bookmarkSize = 24.0;
+          bookmarkRightPadding = 10.0;
         }
 
         return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: axisCount, childAspectRatio: aspectRatio),
-            itemCount: provider.showWindowList.length,
+            itemCount: itemProvider.showWindowList.length,
             shrinkWrap: true,
             padding:
-            EdgeInsets.only(left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
+                EdgeInsets.only(left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              final item = provider.showWindowList[index];
+              final item = itemProvider.showWindowList[index];
               return InkWell(
                   onTap: () {
                     EventLog.sendEventLog("click_show_window_item",
@@ -94,12 +102,21 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
                   },
                   child: Column(children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: AnimatedSwitcher(
-                        child: ShowWindowImageWidget(item, imageSize),
-                        duration: Duration(seconds: 1),
-                      ),
-                    ),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          children: [
+                            AnimatedSwitcher(
+                              child: ShowWindowImageWidget(item, imageSize),
+                              duration: Duration(seconds: 1),
+                            ),
+                            thumbnailBookmarkWidget(
+                                itemProvider.isBookmark(item),
+                                backgroundWidth: imageSize,
+                                backgroundHeight: bookmarkDimHeight,
+                                bookmarkRightPadding: bookmarkRightPadding,
+                                bookmarkSize: bookmarkSize)
+                          ],
+                        )),
                     SizedBox(
                       height: 10,
                     ),
@@ -120,7 +137,7 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
                       child: Text(
                         "♥ ${likeToStringFormant(item.likes)}",
                         style:
-                        TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
+                            TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
                       ),
                       width: 160,
                     )

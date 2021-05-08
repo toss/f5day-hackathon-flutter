@@ -26,10 +26,9 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bookmarkItems =
-        Provider.of<ItemProvider>(context, listen: true).bookmarkItemList;
-
     final shopProvider = Provider.of<ShopProvider>(context, listen: true);
+    final itemProvider = Provider.of<ItemProvider>(context, listen: true);
+    final bookmarkItems = itemProvider.bookmarkItemList;
 
     final aspectRatio = MediaQuery.of(context).size.height /
         (MediaQuery.of(context).size.height + 210);
