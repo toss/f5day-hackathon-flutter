@@ -220,6 +220,7 @@ class ItemImageState extends State<ItemImageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final itemProvider = Provider.of<ItemProvider>(context, listen: true);
     return InkWell(
       onTap: () {
         EventLog.sendEventLog("click_item_detail_item", eventProperties: {
@@ -234,10 +235,19 @@ class ItemImageState extends State<ItemImageWidget> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: AnimatedSwitcher(
-              child: _item.getImageWidget(_index,
-                  width: 160, height: 160, fit: BoxFit.fitWidth),
-              duration: Duration(seconds: 1),
+            child: Stack(
+              children: [
+                AnimatedSwitcher(
+                  child: _item.getImageWidget(_index,
+                      width: 160, height: 160, fit: BoxFit.fitWidth),
+                  duration: Duration(seconds: 1),
+                ),
+                thumbnailBookmarkWidget(itemProvider.isBookmark(_item),
+                    backgroundWidth: 160,
+                    backgroundHeight: 38,
+                    bookmarkRightPadding: 10,
+                    bookmarkSize: 24)
+              ],
             ),
           ),
           SizedBox(

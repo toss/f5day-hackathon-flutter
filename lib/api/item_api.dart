@@ -22,15 +22,9 @@ class ItemApi extends AbstractApi {
     print('ItemApi http: path $path');
     List<Item> list = [];
     var response = await httpGet(Uri.parse(path));
-    /* var response = await http
-        .get(Uri.parse(path), headers: {"Authorization": "Bearer phobobunbo"});*/
     if (response.statusCode == 200) {
       Iterable decodeJson = convert.jsonDecode(response.body);
       list.addAll(List<Item>.from(decodeJson.map((e) => Item.fromJson(e))));
-      /*  final decodeJson = convert.jsonDecode(response.body);
-      print('ItemApi http: decodeJson $decodeJson');
-      List shop = decodeJson['items'];
-      shop.forEach((element) => list.add(Item.fromJson(element)));*/
     }
     print('ItemApi http result: $list');
 

@@ -50,7 +50,6 @@ class ShopApi extends AbstractApi {
       return Shop.fromJson(convert.jsonDecode(response.body)[0]);
     } else {
       return null;
-      print("http : $response");
     }
   }
 }
