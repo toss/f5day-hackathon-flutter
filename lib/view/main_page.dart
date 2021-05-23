@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:notification_permissions/notification_permissions.dart';
 import 'package:provider/provider.dart';
 import 'package:style_book/log/event_log.dart';
 import 'package:style_book/provider/shop_provider.dart';
@@ -28,7 +29,7 @@ class MainPageHome extends StatefulWidget {
   State<StatefulWidget> createState() => MainPageState();
 }
 
-class MainPageState extends State<MainPageHome> {
+class MainPageState extends State<MainPageHome> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   late StreamSubscription _event;
 
@@ -36,6 +37,9 @@ class MainPageState extends State<MainPageHome> {
   void initState() {
     print("MainPageState initState");
     super.initState();
+
+    WidgetsBinding.instance?.addObserver(this);
+
     final shopProvider = Provider.of<ShopProvider>(context, listen: false);
     _event = shopProvider.shopInfoStream.asBroadcastStream().listen((event) {
       print("MarketRankState listen $event");
@@ -47,6 +51,10 @@ class MainPageState extends State<MainPageHome> {
           MaterialPageRoute(
               builder: (c) => ItemDetailWidget(event.shop, event.item)));
     });
+  }
+
+  Future<PermissionStatus> _permissionState() async {
+    return await NotificationPermissions.getNotificationPermissionStatus();
   }
 
   @override
@@ -65,6 +73,15 @@ class MainPageState extends State<MainPageHome> {
   @override
   Widget build(BuildContext context) {
     print("MainPageState build");
+
+    _permissionState().then((value) {
+      if (value != PermissionStatus.granted) {
+        NotificationPermissions.requestNotificationPermissions(
+            iosSettings:
+                NotificationSettingsIos(sound: true, badge: true, alert: true));
+      }
+    });
+
     return Scaffold(
         appBar: AppBar(
           title: _onTapTitle(_selectedIndex),
