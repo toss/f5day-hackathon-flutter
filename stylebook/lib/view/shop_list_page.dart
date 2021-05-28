@@ -32,13 +32,6 @@ class _ShopListPageState extends State<ShopListPage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ShopProvider>(context);
     return _listView(provider.shopList);
-    /*Scaffold(
-        appBar: AppBar(
-          title: Text("Seller TOP 50"),
-          elevation: 0,
-        ),
-        backgroundColor: Colors.white,
-        body: _listView(provider.shopList));*/
   }
 
   Widget _listView(List<Shop> list) {
@@ -100,13 +93,20 @@ class _ShopListPageState extends State<ShopListPage> {
             width: 12,
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(shop.nameDisplay ?? "",
-                  style: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
+              Container(
+                child: SizedBox(
+                  width: 200,
+                  child: Text(shop.nameDisplay ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      )),
+                ),
+              ),
               Text(
                 "♥ ${shop.likesToString()}",
                 style: TextStyle(color: Color(0xffff5e9b)),
