@@ -50,6 +50,7 @@ class Item {
       return Image(
           image: CachedNetworkImageProvider(imageList()[index]),
           width: width,
+          gaplessPlayback: true,
           height: height,
           fit: fit);
       /* return Image.network(imageList()[index],
