@@ -119,7 +119,7 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
                         fontWeight: FontWeight.bold,
                         color: Color(0xff333d4b)),
                   ),
-                  width: 160,
+                  width: imageSize,
                 ),
                 SizedBox(
                   height: 4,
@@ -129,7 +129,7 @@ class ItemShowWindowState extends State<ItemShowWindowWidget> {
                     "♥ ${likeToStringFormant(item.likes)}",
                     style: TextStyle(fontSize: 12, color: Color(0xffb0b8c1)),
                   ),
-                  width: 160,
+                  width: imageSize,
                 )
               ]));
         });

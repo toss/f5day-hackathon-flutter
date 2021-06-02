@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class WidgetUtils {
@@ -8,12 +9,16 @@ class WidgetUtils {
     if (imageUrl.isEmpty) {
       child = SizedBox(width: width, height: height);
     } else {
-      child = Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        width: width,
-        height: height,
-      );
+      try {
+        child = Image(
+          image: CachedNetworkImageProvider(imageUrl),
+          fit: BoxFit.cover,
+          width: width,
+          height: height,
+        );
+      } catch (e) {
+        child = SizedBox(width: width, height: height);
+      }
     }
 
     return ClipRRect(

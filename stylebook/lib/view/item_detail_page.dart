@@ -94,7 +94,11 @@ class ItemDetailState extends State<ItemDetailWidget> {
                           height: 54.0,
                           fit: BoxFit.contain,
                         ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(_shop.nameId ?? ""),
                             Text(_item.time)
