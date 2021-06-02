@@ -68,6 +68,10 @@ class Item {
       return null;
     }
 
-    return Image.network(list[0], width: width, height: height, fit: fit);
+    return Image(
+        image: CachedNetworkImageProvider(list[0]),
+        width: width,
+        height: height,
+        fit: fit);
   }
 }

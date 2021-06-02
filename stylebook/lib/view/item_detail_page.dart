@@ -1,4 +1,5 @@
 import 'package:advertising_id/advertising_id.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,8 +89,9 @@ class ItemDetailState extends State<ItemDetailWidget> {
                   children: [
                     Row(
                       children: [
-                        Image.network(
-                          _shop.imageProfile ?? "",
+                        Image(
+                          image: CachedNetworkImageProvider(
+                              _shop.imageProfile ?? ""),
                           width: 54.0,
                           height: 54.0,
                           fit: BoxFit.contain,
