@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -46,8 +47,13 @@ class Item {
   Widget? getImageWidget(int index,
       {double? width, double? height, BoxFit fit = BoxFit.fill}) {
     try {
-      return Image.network(imageList()[index],
-          width: width, height: height, fit: fit);
+      return Image(
+          image: CachedNetworkImageProvider(imageList()[index]),
+          width: width,
+          height: height,
+          fit: fit);
+      /* return Image.network(imageList()[index],
+          width: width, height: height, fit: fit);*/
     } catch (e) {
       return null;
     }
