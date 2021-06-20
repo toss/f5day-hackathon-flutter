@@ -52,6 +52,8 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   bool _mplaybackReady = false;
   final String _mPath = 'flutter_sound_example.aac';
 
+  String _anUri;
+
   @override
   void initState() {
     _mPlayer.openAudioSession().then((value) {
@@ -105,7 +107,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   void stopRecorder() async {
     await _mRecorder.stopRecorder().then((value) {
       setState(() {
-        //var url = value;
+        _anUri = value;
         _mplaybackReady = true;
       });
     });
@@ -230,7 +232,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (c) => UploadFileTaskManager()));
+                          builder: (c) => UploadFileTaskManager(_anUri)));
                 },
                 //color: Colors.white,
                 //disabledColor: Colors.grey,

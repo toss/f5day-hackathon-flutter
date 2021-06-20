@@ -27,7 +27,5 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>NotificationService</string>
 	</dict>
-		<key>NSUserTrackingUsageDescription</key>
-    	<string>Cần có quyền để xác định người dùng</string>
 </dict>
 </plist>

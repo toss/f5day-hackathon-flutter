@@ -25,7 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Cần có quyền để xác định người dùng</string>
+	<string>Cần có quyền để xác định người dùng.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

@@ -1,12 +1,10 @@
-import 'package:chatchat/recorder/sound_recorder.dart';
+import 'package:chatchat/profile/profile_upload.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-Future firebaseInit() async {
-  await Firebase.initializeApp();
-}
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -20,10 +18,10 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: FutureBuilder(
-          future: firebaseInit(),
+          future: Firebase.initializeApp(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
-              return SimpleRecorder();
+              return ProfileInputWidget();
             } else {
               return CircularProgressIndicator();
             }

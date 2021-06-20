@@ -38,9 +38,22 @@ Future<void> initAmplitude() async {
   // Initialize SDK
   analytics.init(amplitudeApiKey);
   analytics.trackingSessionEvents(true);
-  var id = await AdvertisingId.id(true);
+  var id = await initAdvertisingId();
   print("AdvertisingId $id");
   analytics.setUserId(id);
+/*  var id = await AdvertisingId.id(true);
+  print("AdvertisingId $id");
+  analytics.setUserId(id);*/
+}
+
+Future<String?> initAdvertisingId() async {
+  if (Platform.isIOS) {
+    return null;
+  } else {
+    var id = await AdvertisingId.id(true);
+    print("AdvertisingId $id");
+    return id;
+  }
 }
 
 Future<void> initAppsflyer() async {
@@ -110,14 +123,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future:
-            Future.wait([initOneSignal(), initAmplitude(), initAppsflyer()]),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MainPage();
-          }
-          return SplashPage();
-        });
+    if (Platform.isIOS) {
+      return IosSplashPage();
+    } else {
+      return FutureBuilder(
+          future:
+              Future.wait([initOneSignal(), initAmplitude(), initAppsflyer()]),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MainPage();
+            }
+            return SplashPage();
+          });
+    }
   }
 }

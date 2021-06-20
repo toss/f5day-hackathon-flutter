@@ -1,15 +1,19 @@
 // ignore: avoid_web_libraries_in_flutter
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 
 class UploadFileTaskManager extends StatefulWidget {
+  final String _uploadUri;
+
+  UploadFileTaskManager(this._uploadUri);
+
   @override
   _UploadFileTaskManager createState() {
-    return _UploadFileTaskManager("flutter_sound_example.aac");
+    return _UploadFileTaskManager(_uploadUri);
   }
 }
 
@@ -17,15 +21,14 @@ class _UploadFileTaskManager extends State<UploadFileTaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   Future<firebase_storage.UploadTask> uploadFile(File file) async {
-    Log.d("file.path ${file.path}");
+    log("file.path ${file.path}");
     if (file == null) {
       return null;
     }
 
-    final ref = firebase_storage.FirebaseStorage.instanceFor()
+    final ref = firebase_storage.FirebaseStorage.instance
         .ref()
-        .child("playground")
-        .child("/record1");
+        .child("playground/record1");
 
     final metadata = firebase_storage.SettableMetadata(contentType: 'audio/*');
     firebase_storage.UploadTask uploadTask = ref.putFile(file, metadata);
@@ -38,10 +41,16 @@ class _UploadFileTaskManager extends State<UploadFileTaskManager> {
   _UploadFileTaskManager(this._uri);
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _upload(_uri);
     return Scaffold(
-      body: Text("Task Upload"),
+      body: Text("Task Upload $_uri"),
     );
   }
 
