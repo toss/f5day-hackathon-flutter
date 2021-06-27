@@ -1,4 +1,5 @@
 import 'package:chatchat/profile/image_upload.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,13 @@ class ProfileInputWidget extends StatefulWidget {
 }
 
 class _ProfileInputState extends State<ProfileInputWidget> {
+  @override
+  void initState() {
+    super.initState();
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    print("FirebaseAuth uid $uid");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,7 @@
 import 'package:chatchat/profile/profile_upload.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +21,14 @@ class MyApp extends StatelessWidget {
           future: Firebase.initializeApp(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
+              FirebaseAuth.instance.authStateChanges().listen((user) {
+                if (user == null) {
+                  FirebaseAuth.instance.signInAnonymously();
+                }
+                print("Firebase auth ${user?.uid}");
+                //return ProfileInputWidget();
+              });
+
               return ProfileInputWidget();
             } else {
               return CircularProgressIndicator();

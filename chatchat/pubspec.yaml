@@ -30,9 +30,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_sound: ^8.1.4
   permission_handler: ^8.0.0+2
+  image_picker: ^0.8.0+3
   firebase_core: "^1.2.0"
   firebase_storage: "^8.1.0"
-  image_picker: ^0.8.0+3
+  firebase_auth: ^1.4.1
+  path: ^1.8.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:advertising_id/advertising_id.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -24,6 +26,7 @@ const amplitudeApiKey = "20cb8330bbccaa8f0524200f15f98188";
 const appsflyerDevKey = "ut9qtkwRKRdp9Fb8Ajrbik";
 
 Future<void> initOneSignal() async {
+  print("initOneSignal");
   if (!kReleaseMode) {
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   }
@@ -34,31 +37,34 @@ Future<void> initOneSignal() async {
 }
 
 Future<void> initAmplitude() async {
+  print("initAmplitude");
   final Amplitude analytics = Amplitude.getInstance(instanceName: "stylebook");
   // Initialize SDK
   analytics.init(amplitudeApiKey);
   analytics.trackingSessionEvents(true);
-  var id = await initAdvertisingId();
-  print("AdvertisingId $id");
+  final id = await initAdvertisingId();
+  print("amplitude user unique id $id");
   analytics.setUserId(id);
-/*  var id = await AdvertisingId.id(true);
-  print("AdvertisingId $id");
-  analytics.setUserId(id);*/
 }
 
 Future<String?> initAdvertisingId() async {
-  if (Platform.isIOS) {
-    return null;
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    final userCredential = await FirebaseAuth.instance.signInAnonymously();
+    return userCredential.user?.uid;
   } else {
-    var id = await AdvertisingId.id(true);
-    print("AdvertisingId $id");
-    return id;
+    return user.uid;
   }
+  /*return FirebaseAuth.instance.authStateChanges().map((user) {
+
+    user?.uid;
+    //return ProfileInputWidget();
+  });*/
 }
 
 Future<void> initAppsflyer() async {
   final appsFlyerOptions =
-      AppsFlyerOptions(afDevKey: appsflyerDevKey, showDebug: !kReleaseMode);
+  AppsFlyerOptions(afDevKey: appsflyerDevKey, showDebug: !kReleaseMode);
 
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
@@ -95,7 +101,7 @@ Future<void> initWebView() async {
 
     if (swAvailable && swInterceptAvailable) {
       AndroidServiceWorkerController serviceWorkerController =
-          AndroidServiceWorkerController.instance();
+      AndroidServiceWorkerController.instance();
 
       serviceWorkerController.serviceWorkerClient = AndroidServiceWorkerClient(
         shouldInterceptRequest: (request) async {
@@ -107,7 +113,11 @@ Future<void> initWebView() async {
   }
 }
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  //await FirebaseAuth.instance.useEmulator('http://localhost:9099');
+  // runApp(AuthExampleApp());
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ShopProvider(ShopApi())),
@@ -118,12 +128,25 @@ void main() {
   ));
 }
 
+/*
+void main() {
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ShopProvider(ShopApi())),
+      ChangeNotifierProvider(
+          create: (_) => ItemProvider(ItemApi(), BookmarkApi()))
+    ],
+    child: MyApp(),
+  ));
+}
+*/
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
+    /*if (Platform.isIOS) {
       return IosSplashPage();
     } else {
       return FutureBuilder(
@@ -135,6 +158,15 @@ class MyApp extends StatelessWidget {
             }
             return SplashPage();
           });
-    }
+    }*/
+    return FutureBuilder(
+        future:
+            Future.wait([initOneSignal(), initAmplitude(), initAppsflyer()]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MainPage();
+          }
+          return SplashPage();
+        });
   }
 }

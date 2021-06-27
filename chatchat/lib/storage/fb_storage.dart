@@ -2,9 +2,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class UploadFileTaskManager extends StatefulWidget {
   final String _uploadUri;
@@ -25,10 +27,11 @@ class _UploadFileTaskManager extends State<UploadFileTaskManager> {
     if (file == null) {
       return null;
     }
+    final fileName = basename(file.path);
 
     final ref = firebase_storage.FirebaseStorage.instance
         .ref()
-        .child("playground/record1");
+        .child("playground/$fileName");
 
     final metadata = firebase_storage.SettableMetadata(contentType: 'audio/*');
     firebase_storage.UploadTask uploadTask = ref.putFile(file, metadata);

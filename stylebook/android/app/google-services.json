@@ -29,6 +29,13 @@
             {
               "client_id": "1044174354394-1eld66nt06c4ivj49o7c1hbbeufabad9.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1044174354394-j4oprb5ses4iimlhl7ekbp3hnm08j6rr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.style.styleBook"
+              }
             }
           ]
         }

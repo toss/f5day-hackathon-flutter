@@ -1,5 +1,5 @@
-import 'package:advertising_id/advertising_id.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -142,12 +142,10 @@ class ItemDetailState extends State<ItemDetailWidget> {
                 _bookmark = !_bookmark;
                 EventLog.sendEventLog("click_bookmark",
                     eventProperties: {"is_bookmark": _bookmark});
-                AdvertisingId.id(true).then((value) {
-                  if (value != null) {
-                    print("item bookmark userId : $value");
-                    provider.updateBookmark(value, _item.id, _bookmark);
-                  }
-                });
+                final uid = FirebaseAuth.instance.currentUser?.uid;
+                if (uid != null) {
+                  provider.updateBookmark(uid, _item.id, _bookmark);
+                }
               });
             }),
             SizedBox(

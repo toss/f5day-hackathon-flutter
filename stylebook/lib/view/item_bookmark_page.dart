@@ -1,4 +1,4 @@
-import 'package:advertising_id/advertising_id.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +17,10 @@ class ItemBookmarkState extends State<ItemBookmarkPage> {
   void initState() {
     super.initState();
     final provider = Provider.of<ItemProvider>(context, listen: false);
-    AdvertisingId.id(true).then((id) {
-      if (id != null) {
-        provider.fetchBookmarkList(id);
-      }
-    });
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      provider.fetchBookmarkList(uid);
+    }
   }
 
   @override
